@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create *)",
+      "Bash(mkdir -p src/core/audio src/core/ble src/visualizer src/screens src/components public/audio tools *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\hhj48\\Projects\\Tekto-DJing-project\\frontend\\src\\core"
+    ]
+  }
+}

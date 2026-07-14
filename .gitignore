@@ -1,0 +1,26 @@
+# frontend (Node / Vite)
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# backend (Python)
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code local settings (machine/session-specific)
+.claude/settings.local.json
+
+# NOTE: *.mp3 is intentionally NOT ignored — demo audio is committed to the repo.
