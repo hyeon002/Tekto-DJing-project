@@ -15,8 +15,21 @@ npm install
 npm run dev
 ```
 
-`http://localhost:5173` 에서 확인. `http://localhost:5173/tools/xxx.html` 로 개발용
-검증 페이지(React와 무관한 단독 HTML)도 접속 가능.
+`http://localhost:5173` 에서 Figma 기반 Home 화면을 확인합니다.
+
+- `/test`: 기존 오디오, BLE, Serial, 컨트롤 입력 및 비주얼라이저 디버그 패널
+- `/test/ble.html`: 독립 BLE 수신 검증 페이지 (프로덕션 빌드에도 포함)
+
+Home의 Let’s Start Mixing은 `/music-select`로 이동하며 뒤로 가기로 Home으로 돌아옵니다.
+음악 선택 화면의 +는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
+음악 검색 화면은 Figma 참조 앨범 목록에서 앨범명과 아티스트명으로 검색할 수 있습니다.
+앨범 상세와 다른 분류는 후속 디자인/데이터 연결 전이며, 시작 버튼과 Home의 Setting, Playlist도 아직 비활성 상태입니다.
+배터리는 실제 연결 값을 표시할 수 있을 때까지 `--%`로 표시합니다.
+영상은 `frontend/src/screens/Home.tsx`의 `videoSrc` prop으로 연결할 수 있고,
+지정하지 않으면 Figma 원본 이미지를 표시합니다. Figma 이미지·아이콘은
+`frontend/public/images/home`에 저장되어 임시 Figma URL에 의존하지 않습니다.
+Pretendard가 설치되어 있지 않으면 시스템 폰트를 사용합니다.
+배포 서버에서는 `/test` 직접 접속 시 SPA의 `index.html`을 반환하도록 설정해야 합니다.
 
 ### backend (선택)
 

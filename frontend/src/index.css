@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -15,3 +15,5 @@ body {
 #root {
   min-height: 100svh;
 }
+
+.not-found { padding: 48px; }
