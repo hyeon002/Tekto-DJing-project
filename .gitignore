@@ -5,13 +5,6 @@ dist-ssr/
 .vite/
 *.local
 
-# backend (Python)
-__pycache__/
-*.pyc
-.venv/
-venv/
-*.egg-info/
-
 # OS
 .DS_Store
 Thumbs.db

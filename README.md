@@ -31,18 +31,7 @@ Home 배터리는 Figma 시안의 고정 `92%`를 원본 이미지로 표시합�
 Home은 `frontend/public/fonts`의 Pretendard와 Roboto Mono 웹폰트를 사용하므로 PC 설치가 필요하지 않습니다. 배터리의 Matricha 글꼴은 Figma에서 내보낸 고정 이미지로 재현합니다.
 배포 서버에서는 `/test` 직접 접속 시 SPA의 `index.html`을 반환하도록 설정해야 합니다.
 
-### backend (선택)
-
-```
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-전시 데모는 프론트 단독으로 완전히 동작한다. 백엔드는 믹싱 로그, 플레이리스트 저장
-등 선택적 부가 기능 전용이며, 꺼져 있어도 앱은 정상 동작해야 한다.
+앱은 별도 백엔드 없이 프론트엔드 단독으로 실행됩니다.
 
 ## 중요 제약
 
