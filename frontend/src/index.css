@@ -22,3 +22,8 @@ body {
 .album-cover-frame { display: block; overflow: hidden; flex-shrink: 0; }
 .album-cover-frame > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .album-cover-trim > img { transform: scale(1.012); }
+
+/* Keep browser scrolling inside the app, including tablet overscroll. */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+#root { height: 100dvh; min-height: 0; overflow: auto; overscroll-behavior: none; }
+.music-search-results, .music-search-categories { overscroll-behavior: contain; }

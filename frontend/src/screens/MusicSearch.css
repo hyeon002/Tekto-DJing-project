@@ -26,3 +26,9 @@
 .music-search a:focus-visible, .music-search-results:focus-visible, .music-search-field:focus-within { outline: 3px solid #467be9; outline-offset: 4px; }
 @media (max-width: 600px) { .music-search { padding-left: 20px; } .music-search-header { margin-right: 20px; justify-content: flex-end; gap: 16px; } .music-search-field { width: calc(100% - 60px); } .music-search-tabs { margin-top: 32px; } }
 .music-search{padding-bottom:170px}.music-search-album{border:0;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}.music-search-album[aria-pressed=true]{box-shadow:inset 0 0 0 2px #6f9bff}.music-search-album:focus-visible{outline:3px solid #467be9;outline-offset:-3px}
+
+/* The results scroll within the screen instead of extending the page. */
+.music-search { height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 3svh; }
+.music-search:has(.track-preview) { padding-bottom: 150px; }
+.music-search-header, .music-search-tabs, .music-search-categories { flex-shrink: 0; }
+.music-search-results { min-height: 0; overflow: auto; }
