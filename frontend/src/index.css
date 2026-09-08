@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -15,3 +15,10 @@ body {
 #root {
   min-height: 100svh;
 }
+
+.not-found { padding: 48px; }
+
+/* Electric Shock's source image contains a thin black border. */
+.album-cover-frame { display: block; overflow: hidden; flex-shrink: 0; }
+.album-cover-frame > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.album-cover-trim > img { transform: scale(1.012); }

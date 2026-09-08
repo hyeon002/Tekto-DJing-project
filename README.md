@@ -15,21 +15,23 @@ npm install
 npm run dev
 ```
 
-`http://localhost:5173` 에서 확인. `http://localhost:5173/tools/xxx.html` 로 개발용
-검증 페이지(React와 무관한 단독 HTML)도 접속 가능.
+`http://localhost:5173` 에서 Figma 기반 Home 화면을 확인합니다.
 
-### backend (선택)
+- `/test`: 기존 오디오, BLE, Serial, 컨트롤 입력 및 비주얼라이저 디버그 패널
+- `/test/ble.html`: 독립 BLE 수신 검증 페이지 (프로덕션 빌드에도 포함)
 
-```
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+Home의 Let’s Start Mixing은 `/music-select`로 이동하며 뒤로 가기로 Home으로 돌아옵니다.
+음악 선택 화면의 +는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
+음악 검색 화면은 Figma 참조 앨범 목록에서 앨범명과 아티스트명으로 검색할 수 있습니다.
+앨범 상세와 다른 분류는 후속 디자인/데이터 연결 전이며, 시작 버튼과 Home의 Setting, Playlist도 아직 비활성 상태입니다.
+Home 배터리는 Figma 시안의 고정 `92%`를 원본 이미지로 표시합니다. 실제 기기 배터리 값은 아직 연결되지 않았습니다.
+영상은 `frontend/src/screens/Home.tsx`의 `videoSrc` prop으로 연결할 수 있고,
+지정하지 않으면 Figma 원본 이미지를 표시합니다. Figma 이미지·아이콘은
+`frontend/public/images/home`에 저장되어 임시 Figma URL에 의존하지 않습니다.
+Home은 `frontend/public/fonts`의 Pretendard와 Roboto Mono 웹폰트를 사용하므로 PC 설치가 필요하지 않습니다. 배터리의 Matricha 글꼴은 Figma에서 내보낸 고정 이미지로 재현합니다.
+배포 서버에서는 `/test` 직접 접속 시 SPA의 `index.html`을 반환하도록 설정해야 합니다.
 
-전시 데모는 프론트 단독으로 완전히 동작한다. 백엔드는 믹싱 로그, 플레이리스트 저장
-등 선택적 부가 기능 전용이며, 꺼져 있어도 앱은 정상 동작해야 한다.
+앱은 별도 백엔드 없이 프론트엔드 단독으로 실행됩니다.
 
 ## 중요 제약
 

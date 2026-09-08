@@ -1,0 +1,41 @@
+.music-select {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 5svh 3.75vw;
+  background: radial-gradient(ellipse at 36.64% 28.37%, #f4f8ff 0%, #deeaff 100%);
+  color: #7485a4;
+  font-family: Pretendard, 'Segoe UI', sans-serif;
+}
+.music-select-discs { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.music-select-disc { position: absolute; top: 50%; width: 66.96vw; height: 66.96vw; max-width: none; }
+.music-select-disc-left { left: -30.04vw; transform: translateY(-50%); }
+.music-select-disc-right { right: -30.04vw; transform: translateY(-50%) rotate(180deg); }
+.music-select-header { position: relative; display: flex; justify-content: center; align-items: center; min-height: clamp(44px, 3.75vw, 60px); }
+.music-select-header h1 { margin: 0; font-size: clamp(18px, 1.75vw, 28px); font-weight: 500; line-height: 1.2; letter-spacing: -.04em; }
+.music-select-back { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: clamp(44px, 3.75vw, 60px); height: clamp(44px, 3.75vw, 60px); background: #f2f7ff; border: 1px solid #e5ecfc; border-radius: 50%; }
+.music-select-back img { width: 83.33%; height: 83.33%; }
+.music-select-decks { position: absolute; left: 50%; top: 50.1%; transform: translate(-50%, -50%); display: flex; gap: 11.12vw; }
+.music-select-add { display: grid; place-items: center; width: 14.25vw; height: 14.25vw; min-width: 96px; min-height: 96px; padding: 0; background: #8c9bb9; border: 1.2px solid #7283a4; border-radius: clamp(10px, 1vw, 16px); }
+.music-select-add-icon { display: grid; place-items: center; position: relative; width: clamp(28px, 2.6875vw, 43px); height: clamp(28px, 2.6875vw, 43px); }
+.music-select-add-circle { position: absolute; width: 100%; height: 100%; }
+.music-select-add-plus { position: relative; width: 38.14%; height: 38.14%; }
+.music-select-footer { grid-row: 3; display: flex; justify-content: center; }
+.music-select-start { display: grid; place-items: center; width: clamp(150px, 14vw, 224px); min-height: clamp(50px, 8svh, 80px); padding: 16px 24px; border: 1px solid #ffffff33; border-radius: 50px; background: linear-gradient(#6d9aff, #90c6ff); color: white; font: 500 clamp(17px, 1.625vw, 26px)/1.2 Pretendard, 'Segoe UI', sans-serif; letter-spacing: -.04em; }
+.music-select button:disabled { opacity: 1; cursor: default; }
+.music-select button:enabled { cursor: pointer; }
+.music-select a:focus-visible, .music-select button:focus-visible { outline: 3px solid #467be9; outline-offset: 5px; }
+.music-select-back:hover { background: white; }
+@media (max-width: 700px) {
+  .music-select { padding: 24px; }
+  .music-select-disc { width: 125vw; height: 125vw; }
+  .music-select-disc-left { left: -87vw; }
+  .music-select-disc-right { right: -87vw; }
+  .music-select-decks { gap: 12vw; }
+  .music-select-add { width: 28vw; height: 28vw; }
+}
+.music-select-add{position:relative;text-decoration:none;color:#2a2a31}.selected-track-cover{width:100%;height:100%;object-fit:cover;border-radius:16px 0 0 16px}.music-select-add.has-track{border:0;background:transparent}.selected-track-info{position:absolute;left:100%;top:0;width:100%;height:100%;border-radius:0 16px 16px 0;background:#fbfcff;padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left}.selected-track-info strong{font-size:clamp(16px,1.625vw,26px);line-height:1.2;letter-spacing:-.04em}.selected-track-info>span{font-size:clamp(12px,1.125vw,18px);color:#a5b0c8}.selected-track-info time{margin-top:auto;font:clamp(16px,1.5vw,24px) monospace;color:#989eaf}.music-select-add.has-track:first-child .selected-track-info{left:auto;right:100%;border-radius:16px 0 0 16px}.music-select-add.has-track:first-child .selected-track-cover{border-radius:0 16px 16px 0}
+@media(max-width:700px){.selected-track-info,.music-select-add.has-track:first-child .selected-track-info{left:0;right:auto;top:100%;height:auto;min-height:110px;border-radius:0 0 12px 12px;padding:10px}.selected-track-cover,.music-select-add.has-track:first-child .selected-track-cover{border-radius:12px 12px 0 0}}

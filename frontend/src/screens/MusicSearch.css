@@ -1,0 +1,28 @@
+.music-search { --album-width: clamp(300px, 30vw, 480px); --cover-size: clamp(137.5px, 13.75vw, 220px); min-height: 100svh; padding: 5svh 0 8svh 3.75vw; overflow-x: hidden; background: radial-gradient(ellipse at 36.64% 28.37%, #f4f8ff, #deeaff); color: #2a2a31; font-family: Pretendard, 'Segoe UI', sans-serif; }
+.music-search-header { position: relative; height: clamp(44px, 3.75vw, 60px); margin-right: 3.75vw; display: flex; align-items: center; justify-content: center; }
+.music-search-back { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: clamp(44px, 3.75vw, 60px); height: clamp(44px, 3.75vw, 60px); border: 1px solid #e5ecfc; border-radius: 50%; background: #fbfcff; }
+.music-search-back img { width: 83.33%; height: 83.33%; }
+.music-search-field { display: flex; align-items: center; gap: 14px; width: clamp(235px, 22.875vw, 366px); height: 100%; padding: 0 20px; border: 1px solid #e5ecfc; border-radius: 50px; background: #fbfcff; box-shadow: 0 0 7px #26345312; }
+.music-search-field > img { width: 24px; height: 24px; transform: scaleY(-1); }
+.music-search-field input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #2a2a31; font: 500 clamp(14px, 1.25vw, 20px)/1.2 Pretendard, 'Segoe UI', sans-serif; letter-spacing: -.05em; }
+.music-search-field input::placeholder { color: #aab5cf; }
+.music-search-tabs { display: flex; align-items: center; gap: clamp(18px, 1.75vw, 28px); margin-top: 5.8svh; }
+.music-search-tabs h1, .music-search-tabs button { margin: 0; padding: 0; border: 0; background: none; font: 500 clamp(24px, 2.25vw, 36px)/1.2 Pretendard, 'Segoe UI', sans-serif; letter-spacing: -.04em; }
+.music-search-tabs h1 { font-weight: 600; }
+.music-search-tabs button { color: #c7cdde; }
+.music-search-categories { display: flex; gap: 8px; overflow-x: auto; padding-right: 3.75vw; margin-top: 3.1svh; scrollbar-width: thin; }
+.music-search-categories button { flex-shrink: 0; min-height: clamp(32px, 3vw, 48px); padding: 8px clamp(16px, 1.5vw, 24px); border: 0; border-radius: 50px; color: #9eadc8; background: #e4eafb; font: 500 clamp(14px, 1.25vw, 20px)/1.2 Pretendard, 'Segoe UI', sans-serif; letter-spacing: -.05em; }
+.music-search-categories .is-active { color: white; background: radial-gradient(ellipse at 35% 50%, #5d85ff, #77a6ff 50%, #90c6ff); }
+.music-search-results { margin-top: 2.4svh; overflow-x: auto; padding: 0 3.75vw 16px 0; scrollbar-width: thin; scrollbar-color: #bdcce6 transparent; }
+.music-search-grid { display: grid; grid-template-rows: repeat(2, auto); gap: clamp(15px, 1.5vw, 24px) clamp(8px, .75vw, 12px); width: max-content; }
+.music-search-album { display: flex; min-width: 0; height: var(--cover-size); border-radius: clamp(10px, 1vw, 16px); overflow: hidden; background: #fbfcfe; }
+.music-search-cover { width: var(--cover-size); height: var(--cover-size); object-fit: cover; flex-shrink: 0; }
+.music-search-album-info { min-width: 0; flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(12px, 1.25vw, 20px) clamp(10px, 1vw, 16px) 10px; }
+.music-search-album-info h2 { margin: 0; font-size: clamp(16px, 1.5vw, 24px); line-height: 1.2; font-weight: 600; letter-spacing: -.04em; }
+.music-search-album-info p { margin: clamp(6px, .75vw, 12px) 0 0; color: #a5b0c8; font-size: clamp(12px, 1vw, 16px); letter-spacing: -.04em; }
+.music-search-duration { margin-top: auto; padding: clamp(6px, .625vw, 10px); border-radius: 8px; background: #f1f5ff; color: #7f8ba8; font: 400 clamp(10px, .875vw, 14px)/1.2 'Roboto Mono', monospace; letter-spacing: -.06em; white-space: nowrap; }
+.music-search-empty { padding: 48px 24px 48px 0; color: #7485a4; }
+.music-search button:disabled { opacity: 1; cursor: default; }
+.music-search a:focus-visible, .music-search-results:focus-visible, .music-search-field:focus-within { outline: 3px solid #467be9; outline-offset: 4px; }
+@media (max-width: 600px) { .music-search { padding-left: 20px; } .music-search-header { margin-right: 20px; justify-content: flex-end; gap: 16px; } .music-search-field { width: calc(100% - 60px); } .music-search-tabs { margin-top: 32px; } }
+.music-search{padding-bottom:170px}.music-search-album{border:0;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}.music-search-album[aria-pressed=true]{box-shadow:inset 0 0 0 2px #6f9bff}.music-search-album:focus-visible{outline:3px solid #467be9;outline-offset:-3px}
