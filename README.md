@@ -24,11 +24,11 @@ Home의 Let’s Start Mixing은 `/music-select`로 이동하며 뒤로 가기로
 음악 선택 화면의 +는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
 음악 검색 화면은 Figma 참조 앨범 목록에서 앨범명과 아티스트명으로 검색할 수 있습니다.
 앨범 상세와 다른 분류는 후속 디자인/데이터 연결 전이며, 시작 버튼과 Home의 Setting, Playlist도 아직 비활성 상태입니다.
-배터리는 실제 연결 값을 표시할 수 있을 때까지 `--%`로 표시합니다.
+Home 배터리는 Figma 시안의 고정 `92%`를 원본 이미지로 표시합니다. 실제 기기 배터리 값은 아직 연결되지 않았습니다.
 영상은 `frontend/src/screens/Home.tsx`의 `videoSrc` prop으로 연결할 수 있고,
 지정하지 않으면 Figma 원본 이미지를 표시합니다. Figma 이미지·아이콘은
 `frontend/public/images/home`에 저장되어 임시 Figma URL에 의존하지 않습니다.
-Pretendard가 설치되어 있지 않으면 시스템 폰트를 사용합니다.
+Home은 `frontend/public/fonts`의 Pretendard와 Roboto Mono 웹폰트를 사용하므로 PC 설치가 필요하지 않습니다. 배터리의 Matricha 글꼴은 Figma에서 내보낸 고정 이미지로 재현합니다.
 배포 서버에서는 `/test` 직접 접속 시 SPA의 `index.html`을 반환하도록 설정해야 합니다.
 
 ### backend (선택)

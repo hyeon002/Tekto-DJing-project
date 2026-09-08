@@ -1,3 +1,4 @@
+import AlbumCover from '../components/AlbumCover'
 import './MusicSelect.css'
 import { selectedTrack, selectionUrl, formatTime } from './musicSelection'
 
@@ -20,7 +21,7 @@ export default function MusicSelect() {
         {(['left', 'right'] as const).map((deck) => (
           <a key={deck} className={`music-select-add ${selectedTrack(deck) ? 'has-track' : ''}`} href={selectionUrl('/music-search', deck)}
             aria-label={`${deck === 'left' ? '왼쪽' : '오른쪽'} 음악 추가`}>
-            {selectedTrack(deck) ? <><img className="selected-track-cover" src={selectedTrack(deck)!.cover} alt="" /><span className="selected-track-info"><strong>{selectedTrack(deck)!.title}</strong><span>{selectedTrack(deck)!.artist}</span><time>{formatTime(selectedTrack(deck)!.duration)}</time></span></> : <span className="music-select-add-icon" aria-hidden="true">
+            {selectedTrack(deck) ? <><AlbumCover className={`selected-track-cover${selectedTrack(deck)!.id === 5 ? ' album-cover-trim' : ''}`} src={selectedTrack(deck)!.cover} alt="" /><span className="selected-track-info"><strong>{selectedTrack(deck)!.title}</strong><span>{selectedTrack(deck)!.artist}</span><time>{formatTime(selectedTrack(deck)!.duration)}</time></span></> : <span className="music-select-add-icon" aria-hidden="true">
               <img className="music-select-add-circle" src={asset('add-circle.svg')} alt="" />
               <img className="music-select-add-plus" src={asset('add.svg')} alt="" />
             </span>}

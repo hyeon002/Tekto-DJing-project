@@ -1,7 +1,9 @@
+import AlbumCover from '../components/AlbumCover'
 import { useEffect, useRef, useState } from 'react'
 import { selectedTrack, selectionUrl, formatTime, type Track } from './musicSelection'
 import './Mixing.css'
 import MixingMotion from './MixingMotion'
+import timelineBackground from '../assets/mixing-timeline.svg'
 
 const asset = (name: string) => `/images/mixing/${name}`
 export default function Mixing() {
@@ -44,7 +46,7 @@ function MixingPlayer({track,count,onChange}:{track:Track;count:number;onChange:
  return <main className="mixing" aria-label="Mixing">
   <header className="mixing-header">
    <a className="mixing-back" href={selectionUrl('/music-select')} aria-label="음악 선택으로 돌아가기"><img src="/images/music-select/back.svg" alt="" /></a>
-   <div className="mixing-track"><img src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(duration || track.duration)}</time></div>
+   <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(duration || track.duration)}</time></div>
    <a className="mixing-finish" href="/" onClick={()=>audio.current?.pause()}>Finish</a>
   </header>
   <section className="mixing-panels" aria-label="EQ, 템포, 조그 시각화">
@@ -53,8 +55,9 @@ function MixingPlayer({track,count,onChange}:{track:Track;count:number;onChange:
    <div className="mixing-panel mixing-jog"><MixingMotion kind="jog" playing={playing} /></div>
   </section>
   <div className="mixing-timeline">
-   <img src={asset('timeline.svg')} alt="" />
-   <input type="range" aria-label={track.audioSrc ? '재생 위치' : '모션 미리보기 위치'} min="0" max={totalDuration} step="0.1" value={position} onChange={event=>{if(audio.current && track.audioSrc && duration) audio.current.currentTime=Number(event.target.value);setPosition(Number(event.target.value))}} />
+   <img src={timelineBackground} alt="" />
+   <span className="mixing-playhead" aria-hidden="true" style={{left: `clamp(3px, ${Math.min(100, Math.max(0, position / totalDuration * 100))}%, calc(100% - 3px))`}} />
+   <input type="range" aria-label={track.audioSrc ? '재생 위치' : '모션 미리보기 위치'} aria-valuetext={`${formatTime(position)} / ${formatTime(totalDuration)}`} min="0" max={totalDuration} step="0.1" value={position} onChange={event=>{if(audio.current && track.audioSrc && duration) audio.current.currentTime=Number(event.target.value);setPosition(Number(event.target.value))}} />
   </div>
   <nav className="mixing-transport" aria-label="재생 컨트롤">
    <button aria-label="반복 재생" aria-pressed={repeat} onClick={()=>setRepeat(!repeat)}><img src={asset('repeat.svg')} alt="" /></button>
@@ -63,7 +66,7 @@ function MixingPlayer({track,count,onChange}:{track:Track;count:number;onChange:
    <button aria-label="다음 곡" disabled={count<2} onClick={()=>onChange(1)}><span className="mixing-skip mixing-skip-next"><img className="mixing-skip-bar" src={asset('bar.svg')} alt="" /><img src={asset('next.svg')} alt="" /></span></button>
    <button aria-label="다른 선택 곡으로 전환" disabled={count<2} onClick={()=>onChange(1)}><img src={asset('shuffle.svg')} alt="" /></button>
   </nav>
-  {(!track.audioSrc || error)&&<p className="mixing-status" role="status">{!track.audioSrc?'모션 미리보기 · 음원 연결 대기 중':error}</p>}
+  {error&&<p className="mixing-status" role="status">{error}</p>}
   <audio ref={audio} src={track.audioSrc} loop={repeat} preload="metadata" onPlay={()=>{setPlaying(true);setError('')}} onPause={()=>setPlaying(false)} onEnded={()=>{setPlaying(false);if(count>1)onChange(1)}} onTimeUpdate={event=>setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event=>setDuration(Number.isFinite(event.currentTarget.duration)?event.currentTarget.duration:0)} onError={()=>{setPlaying(false);setError('음원을 불러올 수 없어요.')}} />
  </main>
 }

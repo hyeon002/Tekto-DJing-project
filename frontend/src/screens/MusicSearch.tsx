@@ -1,3 +1,4 @@
+import AlbumCover from '../components/AlbumCover'
 import { useState } from 'react'
 import './MusicSearch.css'
 import TrackPreview from './TrackPreview'
@@ -43,7 +44,7 @@ export default function MusicSearch() {
       {results.length ? <section className="music-search-results" aria-label="앨범 검색 결과" tabIndex={0}>
         <div className="music-search-grid" style={{ gridTemplateColumns: `repeat(${Math.ceil(results.length / 2)}, var(--album-width))` }}>
           {results.map(album => <button type="button" key={album.id} className="music-search-album" aria-label={`${album.id === 4 ? 'The Chase' : album.title} 미리듣기`} aria-pressed={preview?.id === album.id} onClick={() => setPreview(tracks.find(track => track.id === album.id))}>
-            <img className="music-search-cover" src={`/images/music-search/${album.id}.png`} alt={`${album.title} 앨범 커버`} />
+            <AlbumCover className={`music-search-cover${album.id === 5 ? ' album-cover-trim' : ''}`} src={`/images/music-search/${album.id}.png`} alt={`${album.title} 앨범 커버`} />
             <div className="music-search-album-info">
               <h2>{album.title}</h2><p>{album.kind} | {album.artist}</p>
               <span className="music-search-duration">{album.tracks}tracks {album.minutes}min</span>

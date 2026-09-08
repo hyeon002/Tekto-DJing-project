@@ -1,3 +1,4 @@
+import AlbumCover from '../components/AlbumCover'
 import { useEffect, useRef, useState } from 'react'
 import { formatTime, selectionUrl, type Deck, type Track } from './musicSelection'
 import './TrackPreview.css'
@@ -21,7 +22,7 @@ export default function TrackPreview({track,deck}:{track:Track;deck:Deck}) {
  }
  return <aside className="track-preview" aria-label={`${track.title} 미리듣기`}>
   <div className="track-preview-row"><div className="track-preview-pill">
-   <img className="track-preview-cover" src={track.cover} alt="" />
+   <AlbumCover className={`track-preview-cover${track.id === 5 ? ' album-cover-trim' : ''}`} src={track.cover} alt="" />
    <div className="track-preview-title"><strong>{track.title}</strong><span>{track.artist}</span></div>
    <button className="track-preview-toggle" disabled={!track.audioSrc} onClick={toggle} aria-label={playing?'일시정지':'재생'}>{playing?<img src="/images/player/pause.svg" alt="" />:<span aria-hidden="true">▶</span>}</button>
    <div className="track-preview-wave"><img src="/images/player/wave.svg" alt="" /><input type="range" aria-label="재생 위치" min="0" max={duration||1} step="0.1" value={position} disabled={!duration||!track.audioSrc} onChange={event=>{if(audio.current){audio.current.currentTime=Number(event.target.value);setPosition(Number(event.target.value))}}} /></div>

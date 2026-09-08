@@ -10,7 +10,7 @@ export default function Home({ videoSrc }: { videoSrc?: string }) {
     <main className="home" aria-label="Tekto Home">
       <section className="home-dashboard">
         <header className="home-header">
-          <img className="home-avatar" src={asset('profile.png')} alt="Martin 프로필" />
+          <span className="home-avatar"><img src={asset('martin-profile.png')} alt="Martin 프로필" /></span>
           <div className="home-profile"><p>Pioneer of the Waves ໒</p><h1>Martin</h1></div>
           <div className="home-notifications">
             <button className="home-notification-button" aria-label="알림" aria-expanded={notificationsOpen} aria-controls="home-notifications" onClick={() => setNotificationsOpen(!notificationsOpen)}>
@@ -27,7 +27,7 @@ export default function Home({ videoSrc }: { videoSrc?: string }) {
           <button className="home-card home-setting" disabled title="Setting 화면 준비 중" aria-label="Setting — 화면 준비 중">
             <span className="home-card-heading"><img src={asset('setting.svg')} alt="" />Setting</span>
             <span className="home-device"><span>TB-01</span><span>Battery</span></span>
-            <span className="home-battery" aria-label="배터리 미연결">--%</span>
+            <span className="home-battery"><img src={asset('battery-92.png')} alt="배터리 92%" /></span>
           </button>
           <a className="home-card home-playlist" href="/music-search?from=playlist" aria-label="Playlist — 앨범 검색">
             <span className="home-card-heading"><img src={asset('headphones.svg')} alt="" />Playlist</span>
