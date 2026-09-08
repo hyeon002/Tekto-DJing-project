@@ -15,3 +15,16 @@
 .mixing-timeline input::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:100%;border:0;background:transparent}
 .mixing-timeline input::-moz-range-track{height:100%;background:transparent}
 .mixing-timeline input::-moz-range-thumb{width:0;height:100%;border:0;background:transparent}
+
+/* Reserve space for controls, then fit the artwork to the remaining height. */
+.mixing{height:100dvh;min-height:0;gap:clamp(12px,3dvh,30px);overflow:hidden}
+.mixing-header,.mixing-timeline,.mixing-transport,.mixing-status{flex-shrink:0}
+.mixing-visual-area{flex:1;min-height:0;width:100%;container-type:size;display:grid;place-items:center}
+.mixing-panels{width:min(53.625vw,164.0535cqh);min-height:0;margin-top:0;gap:1.4%;grid-template-rows:minmax(0,1fr)}
+.mixing-panel{min-height:0}
+.mixing-timeline,.mixing-transport{margin-top:0}
+.mixing-status{margin:0}
+@media(max-width:700px){
+ .mixing{padding:16px 20px;gap:12px;justify-content:flex-start}
+ .mixing-panels{width:min(100cqw,164.0535cqh);min-height:0;margin-top:0}
+}
