@@ -49,11 +49,13 @@ function MixingPlayer({track,count,onChange}:{track:Track;count:number;onChange:
    <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(duration || track.duration)}</time></div>
    <a className="mixing-finish" href="/" onClick={()=>audio.current?.pause()}>Finish</a>
   </header>
+  <div className="mixing-visual-area">
   <section className="mixing-panels" aria-label="EQ, 템포, 조그 시각화">
    <div className="mixing-panel mixing-eq"><MixingMotion kind="eq" playing={playing} /></div>
    <div className="mixing-panel mixing-tempo"><MixingMotion kind="tempo" playing={playing} /></div>
    <div className="mixing-panel mixing-jog"><MixingMotion kind="jog" playing={playing} /></div>
   </section>
+  </div>
   <div className="mixing-timeline">
    <img src={timelineBackground} alt="" />
    <span className="mixing-playhead" aria-hidden="true" style={{left: `clamp(3px, ${Math.min(100, Math.max(0, position / totalDuration * 100))}%, calc(100% - 3px))`}} />
