@@ -102,6 +102,7 @@ export class BleLinkBase<TValue = number> {
   async disconnect(): Promise<void> {
     const device = this.device
     if (this.characteristic) {
+      this.characteristic.removeEventListener('characteristicvaluechanged', this.handleGattValue)
       try {
         await this.characteristic.stopNotifications()
       } catch {
@@ -159,6 +160,7 @@ export class BleLinkBase<TValue = number> {
 
   private handleGattValue = (event: Event): void => {
     const characteristic = event.target as BluetoothRemoteGATTCharacteristic
+    if (characteristic !== this.characteristic || this.state !== 'connected-gatt') return
     const dataView = characteristic.value
     if (!dataView) return
     const bytes = new Uint8Array(dataView.buffer, dataView.byteOffset, dataView.byteLength)
@@ -188,6 +190,7 @@ export class BleLinkBase<TValue = number> {
 
   private handleGattDisconnected = (): void => {
     console.warn(`[BleLink:${this.namePrefix}] GATT 연결 끊김`)
+    this.characteristic?.removeEventListener('characteristicvaluechanged', this.handleGattValue)
     this.characteristic = null
     this.setState('disconnected')
   }

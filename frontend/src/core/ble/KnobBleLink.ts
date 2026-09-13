@@ -15,7 +15,7 @@ export interface KnobValues {
 const DEVICE_TAG = 0x4b // 'K'
 
 function extractKnobValue(raw: Uint8Array): KnobValues | null {
-  if (raw.length < 4 || raw[0] !== DEVICE_TAG) return null
+  if (raw.length < 4 || raw[0] !== DEVICE_TAG || raw[1] > 100 || raw[2] > 100 || raw[3] > 100) return null
   return { treble: raw[1], bass: raw[2], volume: raw[3] }
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-type Props = { kind: 'eq' | 'tempo' | 'jog'; playing: boolean }
+type Props = { kind: 'eq' | 'tempo' | 'jog'; playing: boolean; knobs?: {treble:number;bass:number;volume:number}; tempo?:number }
 // Procedural dot fields reproduce the reference motion without stretching bitmap frames.
-export default function MixingMotion({ kind, playing }: Props) {
+export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props) {
  const canvasRef = useRef<HTMLCanvasElement>(null)
  const phase = useRef(0)
  useEffect(() => {
@@ -30,13 +30,13 @@ export default function MixingMotion({ kind, playing }: Props) {
      const spread=42+8*Math.sin(t*1.7)
      strength=Math.exp(-((rx/85)**2+((ry-110)/spread)**2)/2)+Math.exp(-((rx/85)**2+((ry+110)/spread)**2)/2)
     } else if(kind==='tempo') {
-     const center=250-165*Math.cos(t*.64)
+     const center=415-330*tempo
      strength=Math.exp(-(((x-75)/24)**2+((y-center)/58)**2)/2)
     } else {
      for(let i=0;i<3;i++) {
       const dx=x-75,dy=y-(95+i*155)
       const distance=Math.hypot(dx,dy)
-      const pulse=(Math.sin(t*1.3+i*2)+1)/2
+      const pulse=knobs ? [knobs.treble,knobs.bass,knobs.volume][i]/100 : .5
       const ring=12+17*pulse
       strength=Math.max(strength,Math.exp(-(((distance-ring)/7)**2)/2)*pulse+Math.exp(-((distance/15)**2)/2)*(1-pulse))
      }
@@ -51,7 +51,7 @@ export default function MixingMotion({ kind, playing }: Props) {
   }
   frame=requestAnimationFrame(draw)
   return ()=>cancelAnimationFrame(frame)
- },[kind,playing])
+ },[kind,playing,knobs,tempo])
  return <canvas ref={canvasRef} width={kind==='jog'?500:150} height={500} role="img" aria-label={`${kind} 도트 애니메이션`} style={{width:'100%',height:'100%',objectFit:'contain'}} />
 }
 
