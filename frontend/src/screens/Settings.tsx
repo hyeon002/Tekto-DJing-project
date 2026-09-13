@@ -28,8 +28,8 @@ export default function Settings() {
     <p className="settings-note">슬라이더는 믹싱 화면에서 조작할 수 있어요.</p>
    </section>
    <section><p className="settings-eyebrow">AUDIO</p><h2>음원 설정</h2>
-    {(['master','bass','scratch'] as const).map(kind=><div className="settings-row" key={kind}><div><h3>{kind==='master'?'기본 음원':kind==='bass'?'베이스 보조 음원':'스크래치 음원'}</h3><span>{assets[kind]?.name||'미등록'}</span></div><label className="settings-file">{assets[kind]?'변경':'파일 선택'}<input aria-label={kind==='master'?'기본 음원 변경':kind==='bass'?'베이스 보조 음원 선택':'스크래치 음원 선택'} type="file" accept="audio/*" disabled={loading} onChange={event=>{void upload(kind,event.target.files?.[0]);event.target.value=''}}/></label></div>)}
-    <p className="settings-note">베이스 보조 음원은 노브의 베이스로 음량을 조절합니다.<br />스크래치 음원은 조그휠을 누르는 동안 재생됩니다.</p>
+    {(['master','scratch'] as const).map(kind=><div className="settings-row" key={kind}><div><h3>{kind==='master'?'기본 음원':'스크래치 음원'}</h3><span>{assets[kind]?.name||'미등록'}</span></div><label className="settings-file">{assets[kind]?'변경':'파일 선택'}<input aria-label={kind==='master'?'기본 음원 변경':'스크래치 음원 선택'} type="file" accept="audio/*" disabled={loading} onChange={event=>{void upload(kind,event.target.files?.[0]);event.target.value=''}}/></label></div>)}
+    <p className="settings-note">스크래치 음원은 조그휠을 누르는 동안 재생됩니다.</p>
     <p role="status">{loading?'음원 확인 중…':error}</p>
    </section>
   </div>

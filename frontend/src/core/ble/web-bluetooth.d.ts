@@ -13,6 +13,7 @@ interface BluetoothLEScanFilterInit {
 interface RequestDeviceOptions {
   filters?: BluetoothLEScanFilterInit[]
   optionalServices?: (string | number)[]
+  optionalManufacturerData?: number[]
   acceptAllDevices?: boolean
 }
 
@@ -34,6 +35,7 @@ interface BluetoothRemoteGATTCharacteristic extends EventTarget {
   readonly value: DataView | null
   startNotifications(): Promise<BluetoothRemoteGATTCharacteristic>
   stopNotifications(): Promise<BluetoothRemoteGATTCharacteristic>
+  readValue(): Promise<DataView>
 }
 
 interface BluetoothRemoteGATTService extends EventTarget {

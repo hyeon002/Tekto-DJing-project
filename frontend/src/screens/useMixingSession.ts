@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import type { useMixingHardware } from './useMixingHardware'
-export type AudioKind = 'master' | 'bass' | 'scratch'
+export type AudioKind = 'master' | 'scratch'
 export type AudioAsset = { url: string; name: string }
 export type Session = {
  hardware: ReturnType<typeof useMixingHardware>

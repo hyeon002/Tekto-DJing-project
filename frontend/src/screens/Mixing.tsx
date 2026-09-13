@@ -1,5 +1,5 @@
 import AlbumCover from '../components/AlbumCover'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { selectedTrack, selectionUrl, formatTime, type Track } from './musicSelection'
 import './Mixing.css'
 import MixingMotion from './MixingMotion'
@@ -12,9 +12,11 @@ export default function Mixing() {
  const {hardware} = useMixingSession()
  const queue = [selectedTrack('left'), selectedTrack('right')].filter((track): track is Track => Boolean(track))
  const [index, setIndex] = useState(0)
+ const count = queue.length
+ const changeTrack = useCallback((step:number) => setIndex(current => count ? (current + step + count) % count : 0), [count])
  const track = queue[index]
  if (!track) return <main className="mixing-empty"><h1>음악을 먼저 선택해주세요.</h1><a href="/music-select">음악 선택으로 이동</a></main>
- return <MixingPlayer hardware={hardware} key={`${index}-${track.id}`} track={track} count={queue.length} onChange={step => setIndex(current => (current + step + queue.length) % queue.length)} />
+ return <MixingPlayer hardware={hardware} key={`${index}-${track.id}`} track={track} count={queue.length} onChange={changeTrack} />
 }
 function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;onChange:(step:number)=>void;hardware:ReturnType<typeof useMixingSession>['hardware']}) {
  const {assets} = useMixingSession()
@@ -37,9 +39,9 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   void Promise.all(entries.map(([kind,asset])=>player.load(kind,asset.url))).then(()=>{if(active)setDuration(player.duration)}).catch(()=>{if(active)setError('음원을 불러올 수 없어요. Setting에서 파일을 확인해주세요.')}).finally(()=>{if(active)setLoading(false)})
   return () => {active=false;player.dispose();engine.current=null}
  },[assets])
- useEffect(()=>{engine.current?.setKnobs(hardware.knobs)},[hardware.knobs])
+ useEffect(()=>{engine.current?.setKnobs(hardware.knobs)},[hardware.knobs,assets])
  useEffect(()=>{engine.current?.setTouch(hardware.touching)},[hardware.touching,files.scratch,loading])
- useEffect(()=>{engine.current?.setRate(tempo)},[tempo])
+ useEffect(()=>{engine.current?.setRate(tempo)},[tempo,assets])
  useEffect(()=>{
   const timer=window.setInterval(()=>{
    const player=engine.current
@@ -67,7 +69,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   <div className="mixing-visual-area">
   <section className="mixing-panels" aria-label="EQ, 템포, 조그 시각화">
    <div className="mixing-panel mixing-eq"><MixingMotion kind="eq" playing={playing} knobs={hardware.knobs} />
-    <div className="mixing-knob-inputs">{(['treble','bass','volume'] as const).map(key=><input key={key} type="range" aria-label={key} title={`${key}: ${hardware.knobs[key]}%`} min="0" max="100" value={hardware.knobs[key]} onChange={event=>hardware.setKnobs(old=>({...old,[key]:Number(event.target.value)}))}/>)}</div></div>
+    <div className="mixing-knob-inputs">{(['high','mid','low'] as const).map(key=><input key={key} type="range" aria-label={`${key.toUpperCase()} EQ`} aria-valuetext={`${((hardware.knobs[key]-50)*.24).toFixed(1)} dB`} title={`${key.toUpperCase()}: ${((hardware.knobs[key]-50)*.24).toFixed(1)} dB`} min="0" max="100" value={hardware.knobs[key]} onChange={event=>hardware.setKnobs(old=>({...old,[key]:Number(event.target.value)}))}/>)}</div></div>
    <div className="mixing-panel mixing-tempo"><MixingMotion kind="tempo" playing={playing} tempo={tempo} /><input className="mixing-tempo-input" type="range" aria-label="재생 속도" aria-valuetext={`${(.9+tempo*.2).toFixed(2)}배`} min="0" max="1" step=".01" value={tempo} onChange={event=>setTempo(Number(event.target.value))}/></div>
    <div className="mixing-panel mixing-jog"><MixingMotion kind="jog" playing={playing} /><button className="mixing-jog-touch" aria-label="조그휠 터치 · 누르는 동안 샘플 재생" aria-pressed={hardware.touching} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);hardware.setScreenTouch(true)}} onPointerUp={()=>hardware.setScreenTouch(false)} onPointerCancel={()=>hardware.setScreenTouch(false)} onLostPointerCapture={()=>hardware.setScreenTouch(false)} onKeyDown={event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();hardware.setScreenTouch(true)}}} onKeyUp={()=>hardware.setScreenTouch(false)} onBlur={()=>hardware.setScreenTouch(false)}/></div>
   </section>

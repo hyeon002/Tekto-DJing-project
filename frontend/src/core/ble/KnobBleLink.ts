@@ -1,26 +1,17 @@
-import { BleLinkBase } from './bleLinkShared'
+import { FirmwareGattLink } from './FirmwareGattLink'
 
-// 노브(Treble/Bass/Volume 3-포텐셔미터) 모듈의 BLE 광고 이름.
-const NAME_PREFIX = 'BLEMIDI_2'
+export interface KnobValues { treble: number; bass: number; volume: number }
+export const KNOB_SERVICE_UUID = 'a1b2c301-1234-5678-9abc-def012345678'
+export const KNOB_CHARACTERISTIC_UUID = 'a1b2c302-1234-5678-9abc-def012345678'
 
-export interface KnobValues {
-  treble: number
-  bass: number
-  volume: number
+// Firmware sends exactly [T, B, V], each 0..100. No K tag or MIDI header.
+export function parseKnobPacket(raw: Uint8Array): KnobValues | null {
+ if (raw.length !== 3 || raw.some(value => value > 100)) return null
+ return {treble:raw[0], bass:raw[1], volume:raw[2]}
 }
-
-// 노브 펌웨어(ESP32-C3, non-connectable 광고 전용)가 실어 보내는 manufacturerData
-// 포맷: Company ID(0xFFFF, 테스트용)는 Web Bluetooth가 이미 벗겨내고 넘겨주므로, 여기
-// raw는 ['K', Treble, Bass, Volume] 4바이트다. 각 값은 0~100.
-const DEVICE_TAG = 0x4b // 'K'
-
-function extractKnobValue(raw: Uint8Array): KnobValues | null {
-  if (raw.length < 4 || raw[0] !== DEVICE_TAG || raw[1] > 100 || raw[2] > 100 || raw[3] > 100) return null
-  return { treble: raw[1], bass: raw[2], volume: raw[3] }
-}
-
-export class KnobBleLink extends BleLinkBase<KnobValues> {
-  constructor() {
-    super({ namePrefix: NAME_PREFIX, extractValue: extractKnobValue })
-  }
+export class KnobBleLink extends FirmwareGattLink<KnobValues> {
+ constructor() {
+  super({namePrefix:'BLEMIDI_2', serviceUuid:KNOB_SERVICE_UUID,
+   characteristicUuid:KNOB_CHARACTERISTIC_UUID, parse:parseKnobPacket})
+ }
 }

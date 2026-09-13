@@ -85,6 +85,9 @@ export class BleLinkBase<TValue = number> {
       const device = await navigator.bluetooth.requestDevice({
         filters: [{ namePrefix: this.namePrefix }],
         optionalServices: OPTIONAL_SERVICES,
+        // Firmware sends T/K/P packets as manufacturer data for company 0xFFFF.
+        // watchAdvertisements filters out manufacturer data not granted here.
+        optionalManufacturerData: [0xffff],
       })
       this.device = device
       device.addEventListener('gattserverdisconnected', this.handleGattDisconnected)

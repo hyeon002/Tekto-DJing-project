@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-type Props = { kind: 'eq' | 'tempo' | 'jog'; playing: boolean; knobs?: {treble:number;bass:number;volume:number}; tempo?:number }
+type Props = { kind: 'eq' | 'tempo' | 'jog'; playing: boolean; knobs?: {high:number;mid:number;low:number}; tempo?:number }
 // Procedural dot fields reproduce the reference motion without stretching bitmap frames.
 export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props) {
  const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -36,7 +36,7 @@ export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props
      for(let i=0;i<3;i++) {
       const dx=x-75,dy=y-(95+i*155)
       const distance=Math.hypot(dx,dy)
-      const pulse=knobs ? [knobs.treble,knobs.bass,knobs.volume][i]/100 : .5
+      const pulse=knobs ? [knobs.high,knobs.mid,knobs.low][i]/100 : .5
       const ring=12+17*pulse
       strength=Math.max(strength,Math.exp(-(((distance-ring)/7)**2)/2)*pulse+Math.exp(-((distance/15)**2)/2)*(1-pulse))
      }

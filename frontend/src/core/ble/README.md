@@ -1,45 +1,27 @@
 # core/ble
 
-Web Bluetooth 기반 연결/수신 모듈. React에 의존하지 않는 순수 TypeScript 모듈.
+## 현재 조그휠·노브 펌웨어
 
-물리 디제잉 모듈(조그휠/슬라이더/노브, 각 ESP32-C3 탑재) 3개 전부와의 BLE 연결
-수립, 값 수신을 담당한다. React나 ControlBus를 직접 참조하지 않고 콜백
-(`onConnectionStateChange` / `onRawPacket` / `onValue`)만 노출한다 — 실제 배선은
-사용하는 쪽(dev/AudioCoreDebugPanel)에서 한다.
+사용자가 제공한 ESP32-C3 펌웨어는 커스텀 GATT READ + NOTIFY 방식입니다.
+Setting과 믹싱 화면의 입력은 `JogBleLink` / `KnobBleLink` → `FirmwareGattLink`를 사용합니다.
 
-Web Bluetooth 제약:
-- HTTPS 또는 localhost에서만 동작
-- iOS/iPadOS 브라우저 미지원
-- 연결은 사용자 제스처(클릭) 안에서만 시작 가능 — `navigator.bluetooth.requestDevice()`
-  호출은 반드시 버튼 클릭 핸들러 등 사용자 액션 내부에서 이루어져야 함
+| 모듈 | 광고 이름 | 서비스 UUID | 특성 UUID | 데이터 |
+| --- | --- | --- | --- | --- |
+| 조그휠 | BLEMIDI_1 | a1b2c101-1234-5678-9abc-def012345678 | a1b2c102-1234-5678-9abc-def012345678 | 1바이트: 0=해제, 1=터치 |
+| 노브 | BLEMIDI_2 | a1b2c301-1234-5678-9abc-def012345678 | a1b2c302-1234-5678-9abc-def012345678 | 3바이트: T/B/V, 각 0~100 |
 
-## 현재 상태
+T/K 태그나 BLE-MIDI 헤더는 붙지 않습니다. 노브의 T/B/V 필드명은 펌웨어 호환을 위해 유지하고, 믹싱에서는 첫째/둘째/셋째 채널을 High/Mid/Low로 변환합니다.
+조그휠은 회전 각도나 모터 속도를 전송하지 않습니다. 모터 정지·2초 대기·가속은 펌웨어 내부 동작입니다.
 
-3개 모듈 전부 파싱 구현 완료. 세 펌웨어 모두
-`pAdvertising->setAdvertisementType(ADV_TYPE_NONCONN_IND)`로 non-connectable
-광고 전용이라 GATT는 항상 실패하고 advertising 폴백만 쓰인다 — 이건 버그가 아니라
-펌웨어 설계이며, `BleLinkBase`의 "GATT 우선 → advertising 폴백" 구조가 결과적으로
-맞게 동작한다.
+`FirmwareGattLink`는 장치 이름과 서비스로 선택 대상을 제한하고 해당 서비스 접근 권한을 요청합니다. notify 리스너를 먼저 등록한 뒤 구독하며, 이후 현재 특성 값을 READ합니다. 펌웨어가 연결 직후 구독 전에 보낸 첫 알림을 놓쳐도 현재 값을 복구할 수 있습니다.
+연결 취소·해제 이후 늦게 도착한 이벤트는 무시하며, 초기 READ보다 새 notify가 먼저 도착하면 오래된 READ로 덮어쓰지 않습니다.
+서비스 연결 실패 시 오류를 표시합니다. 입력을 보내지 않는 광고 방식으로 전환해 연결된 것처럼 표시하지 않습니다. 연결 끊김 후에는 Setting에서 다시 연결합니다.
 
-- `bleLinkShared.ts` — 공유 베이스 `BleLinkBase<TValue>`(제네릭). GATT 우선 시도 →
-  실패 시 advertising 폴백 로직, BLE-MIDI 서비스/특성 UUID(GATT 경로용),
-  `optionalServices` 추측 목록을 담고 있다. `TValue`가 기기마다 다르다 — 슬라이더는
-  `number` 1개, 조그휠은 `boolean`, 노브는 `{treble,bass,volume}` 객체.
-- `web-bluetooth.d.ts` — Web Bluetooth 최소 앰비언트 타입 선언.
+## 이전 코드와 진단 도구
 
-세 기기 모두 manufacturerData 포맷이 동일한 패턴이다: Company ID(0xFFFF, 테스트용)는
-Web Bluetooth가 이미 벗겨내고 넘겨주므로, `extractValue`가 받는 raw는
-`[장치태그 1바이트, 값...]` 형태다.
+- `bleLinkShared.ts`, `SliderBleLink.ts`: 이전 광고 방식 슬라이더 및 공용 진단 코드. 제조사 ID 0xFFFF 권한 처리는 이 경로에만 해당합니다.
+- `knob.ts`, `jogwheel.ts`, `gattNotifyConnection.ts`: 이전 모듈 설정용 커스텀 GATT 구현. 현재 Setting에서는 사용하지 않습니다.
+- `/test`: 현재 JogBleLink/KnobBleLink를 이용한 개발 진단 패널.
+- `/test/ble.html`: 독립 BLE 탐색 도구. 커스텀 UUID를 사용하려면 도구의 추가 UUID 입력에 서비스 UUID를 지정합니다.
 
-- `JogBleLink.ts` (`BLEMIDI_1`) — raw `['T', 0|1]`. `extractTouchValue`가
-  1=터치 On/0=터치 Off로 파싱해 `onValue(boolean)`. 원래 조그휠 터치는
-  USB Serial(`core/serial`)로 들어온다고 가정했었으나, 실제 펌웨어 확인 결과 BLE로
-  확정됨 — `core/serial`은 이제 미사용.
-- `SliderBleLink.ts` (`BLEMIDI_3`) — raw `['P', BPM LSB, BPM MSB]` 3바이트.
-  `extractSliderValue`가 BPM 0~1000 값으로 파싱한다 — `ControlBus`/`AudioCore`도
-  이 0~1000 BPM 스케일에 맞춰져 있다 (구 0~1023 가정에서 변경됨).
-- `KnobBleLink.ts` (`BLEMIDI_2`) — 물리 노브 모듈은 포텐셔미터 3개(Treble/Bass/
-  Volume)를 갖는다. raw `['K', Treble, Bass, Volume]` 4바이트, 각 0~100.
-  `extractKnobValue`가 `{ treble, bass, volume }` 객체로 파싱한다. 단, 기능
-  명세서 기준으로는 노브는 Bass EQ 전용이고 3개 중 물리적으로 구현된 건 1개뿐이라,
-  Treble/Volume 값은 아직 배선 안 된 ADC 핀의 뜬값(노이즈)일 수 있다.
+수정 코드는 배포 후 장치를 다시 선택해 새 서비스 권한을 받아야 합니다. 실제 기기의 연결과 값 수신은 실기 확인이 필요합니다.
