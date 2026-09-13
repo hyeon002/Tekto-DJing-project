@@ -24,11 +24,11 @@ export default function Home({ videoSrc }: { videoSrc?: string }) {
             <img className="home-mixing-art" src={asset('mixing.svg')} alt="" />
             <span>Let’s Start<br />Mixing</span>
           </a>
-          <button className="home-card home-setting" disabled title="Setting 화면 준비 중" aria-label="Setting — 화면 준비 중">
+          <a className="home-card home-setting" href="/settings" aria-label="Setting — 기기 연결 및 음원 설정">
             <span className="home-card-heading"><img src={asset('setting.svg')} alt="" />Setting</span>
             <span className="home-device"><span>TB-01</span><span>Battery</span></span>
             <span className="home-battery"><img src={asset('battery-92.png')} alt="배터리 92%" /></span>
-          </button>
+          </a>
           <a className="home-card home-playlist" href="/music-search?from=playlist" aria-label="Playlist — 앨범 검색">
             <span className="home-card-heading"><img src={asset('headphones.svg')} alt="" />Playlist</span>
             <span className="home-albums" aria-hidden="true">
