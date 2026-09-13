@@ -42,6 +42,22 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
  useEffect(()=>{engine.current?.setKnobs(hardware.knobs)},[hardware.knobs,assets])
  useEffect(()=>{engine.current?.setTouch(hardware.touching)},[hardware.touching,files.scratch,loading])
  useEffect(()=>{engine.current?.setRate(tempo)},[tempo,assets])
+ useEffect(() => {
+  let accumulated = 0
+  const wheel = (event: WheelEvent) => {
+   if (event.ctrlKey || event.metaKey || event.deltaY === 0) return
+   event.preventDefault()
+   const pixels = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1)
+   if (Math.sign(pixels) !== Math.sign(accumulated)) accumulated = 0
+   accumulated += Math.max(-120, Math.min(120, pixels))
+   const steps = Math.trunc(accumulated / 40)
+   if (!steps) return
+   accumulated -= steps * 40
+   setTempo(current => Math.max(0, Math.min(1, Math.round((current - steps * .05) * 100) / 100)))
+  }
+  window.addEventListener('wheel', wheel, {passive:false})
+  return () => window.removeEventListener('wheel', wheel)
+ }, [])
  useEffect(()=>{
   const timer=window.setInterval(()=>{
    const player=engine.current
@@ -87,6 +103,6 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
    <button aria-label="다른 선택 곡으로 전환" disabled={count<2} onClick={()=>onChange(1)}><img src={asset('shuffle.svg')} alt="" /></button>
   </nav>
   {error&&<p className="mixing-status" role="status">{error}</p>}
-  {(loading || !files.master || (hardware.touching && !files.scratch)) && <p className="mixing-status" role="status">{loading?'음원 준비 중…':!files.master?'Setting에서 기본 음원을 등록해주세요.':'스크래치 음원을 등록하면 터치로 음원을 전환할 수 있어요.'}</p>}
+  {(loading || !files.master) && <p className="mixing-status" role="status">{loading?'음원 준비 중…':'Setting에서 기본 음원을 등록해주세요.'}</p>}
  </main>
 }
