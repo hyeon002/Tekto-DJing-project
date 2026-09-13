@@ -533,6 +533,7 @@ async function connect(pickerOptions) {
     const device = await navigator.bluetooth.requestDevice({
       ...pickerOptions,
       optionalServices: [...GUESS_OPTIONAL_SERVICES, ...getExtraUuids()],
+      optionalManufacturerData: [0xffff],
     });
     await setupDevice(device);
   } catch (err) {

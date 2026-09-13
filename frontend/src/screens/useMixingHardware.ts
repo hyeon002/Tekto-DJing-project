@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { JogBleLink } from '../core/ble/JogBleLink'
-import { KnobBleLink, type KnobValues } from '../core/ble/KnobBleLink'
+import { KnobBleLink } from '../core/ble/KnobBleLink'
+import type { EqValues } from '../core/audio/MixingAudio'
 import { JogSerialLink } from '../core/serial/JogSerialLink'
 
 export function useMixingHardware() {
  const links = useRef({ jog: new JogBleLink(), knob: new KnobBleLink(), usb: new JogSerialLink() })
  const [states, setStates] = useState<Record<string,string>>({jog:'disconnected',knob:'disconnected',usb:'disconnected'})
- const [knobs, setKnobs] = useState<KnobValues>({treble:50,bass:100,volume:100})
+ const [knobs, setKnobs] = useState<EqValues>({high:50,mid:50,low:50})
  const [touches, setTouches] = useState({jog:false,usb:false,screen:false})
  const [received, setReceived] = useState({jog:false,knob:false,usb:false})
  useEffect(() => {
@@ -22,7 +23,8 @@ export function useMixingHardware() {
    if(key === 'usb') current.usb.onStateChange = change
    else current[key].onConnectionStateChange = change
   }
-  current.knob.onValue = value => {setKnobs(value);setReceived(old=>({...old,knob:true}))}
+  // Preserve existing wire fields; packet channels 1/2/3 now mean High/Mid/Low.
+  current.knob.onValue = value => {setKnobs({high:value.treble,mid:value.bass,low:value.volume});setReceived(old=>({...old,knob:true}))}
   current.jog.onValue = value => {setTouches(old=>({...old,jog:value}));setReceived(old=>({...old,jog:true}))}
   current.usb.onTouchChange = value => {setTouches(old=>({...old,usb:value}));setReceived(old=>({...old,usb:true}))}
   return () => {

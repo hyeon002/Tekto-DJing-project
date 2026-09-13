@@ -1,22 +1,20 @@
 # core/audio
 
-Web Audio API 기반 사운드 엔진. React에 의존하지 않는 순수 TypeScript 모듈.
+## 현재 믹싱 화면
 
-BLE로 들어오는 값(초당 수십 회)을 받아 템포/EQ/크로스페이더 등 오디오 파라미터를
-직접 갱신한다. React state를 거치지 않고 이 모듈 안에서 오디오 그래프를 직접 조작해
-불필요한 리렌더를 피한다. React 쪽에서는 이 모듈의 시작/정지만 호출한다.
+`MixingAudio.ts`는 기본 음원과 스크래치 음원을 재생하는 Web Audio 엔진입니다.
 
-## 현재 상태
+- 노브: 원곡에 High·Mid·Low 3밴드 EQ를 직접 적용합니다. 각 값 0~100은 -12~+12dB에 대응하며 중앙 50은 0dB입니다.
+- EQ: Low 250Hz lowshelf → Mid 1kHz peaking(Q 0.7) → High 4kHz highshelf. 값은 부드럽게 반영하고 최종 출력에 컴프레서를 적용합니다.
+- 조그휠: 터치 중 스크래치 음원으로 전환하고, 해제하면 기본 음원을 멈춘 위치부터 이어 재생합니다. 크로스페이드는 120ms이며 스크래치 음원은 EQ를 우회합니다.
+- 슬라이더: 기본 음원 재생 속도를 0.9~1.1배로 조절합니다.
+- 지원 음원 종류는 `master`와 `scratch`입니다. 기본 파일은 `public/audio/videoplayback.mp3`이며 Setting에서 변경할 수 있습니다.
+- 파일 로드 실패를 오류로 알리고 테스트 톤으로 자동 대체하지 않습니다.
 
-`AudioCore.ts`에 프로토타입 구현 완료. public 인터페이스는 `setJogTouch` /
-`setSliderValue` / `setKnobValues` 세 개뿐이며, 지금은 실제 BLE 파서(`core/ble`)와
-`dev/AudioCoreDebugPanel`의 Mock 슬라이더가 둘 다 `ControlBus`를 거쳐 이 메서드들을
-호출한다.
+## 이전 진단 엔진
 
-- 조그휠: master+bass 일시정지 ↔ 스크래치 샘플, GainNode 크로스페이드(120ms)
-- 슬라이더: raw 0~1000(BPM) → 0.9~1.1x, master/bass playbackRate 동시 적용
-- 노브: 포텐셔미터 3개(각 raw 0~100)를 한 번에 받는다 —
-  Treble → musicBus 끝단 BiquadFilterNode(highshelf, ±12dB) gain,
-  Bass → bass 트랙 GainNode 볼륨, Volume → masterOutputGain(전체 출력, analyser도
-  이 값 반영된 소리를 봄)
-- `public/audio/*.mp3` 로드 실패 시 OscillatorNode 대신 합성 톤 버퍼로 자동 폴백
+`AudioCore.ts`는 `/test`에서 사용하는 이전 프로토타입입니다. 현재 Setting과 믹싱 화면의 동작은 `MixingAudio.ts`를 기준으로 확인합니다.
+
+## 검증
+
+`frontend`에서 `node --test tests/mixing-audio.test.mjs`를 실행합니다.
