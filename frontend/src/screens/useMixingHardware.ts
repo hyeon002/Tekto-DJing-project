@@ -23,8 +23,9 @@ export function useMixingHardware() {
    if(key === 'usb') current.usb.onStateChange = change
    else current[key].onConnectionStateChange = change
   }
-  // Preserve existing wire fields; packet channels 1/2/3 now mean High/Mid/Low.
-  current.knob.onValue = value => {setKnobs({high:value.treble,mid:value.bass,low:value.volume});setReceived(old=>({...old,knob:true}))}
+  // Physical wiring confirmed by user: packet T/B/V = Mid/Low/High.
+  // Map once here so the dot UI and audio EQ use the same corrected bands.
+  current.knob.onValue = value => {setKnobs({high:value.volume,mid:value.treble,low:value.bass});setReceived(old=>({...old,knob:true}))}
   current.jog.onValue = value => {setTouches(old=>({...old,jog:value}));setReceived(old=>({...old,jog:true}))}
   current.usb.onTouchChange = value => {setTouches(old=>({...old,usb:value}));setReceived(old=>({...old,usb:true}))}
   return () => {
