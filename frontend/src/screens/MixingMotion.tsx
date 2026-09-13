@@ -12,6 +12,9 @@ export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props
   let frame = 0
   let last = 0
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+  // Keep every band visible even when a stale or incomplete value reaches the view.
+  const pulses = [knobs?.high, knobs?.mid, knobs?.low].map(value =>
+   typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) / 100 : .5)
   function draw(now: number) {
    if (!canvas || !ctx) return
    if (last && playing && !reduced.matches) phase.current += Math.min((now-last)/1000, .05)
@@ -36,7 +39,7 @@ export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props
      for(let i=0;i<3;i++) {
       const dx=x-75,dy=y-(95+i*155)
       const distance=Math.hypot(dx,dy)
-      const pulse=knobs ? [knobs.high,knobs.mid,knobs.low][i]/100 : .5
+      const pulse=pulses[i]
       const ring=12+17*pulse
       strength=Math.max(strength,Math.exp(-(((distance-ring)/7)**2)/2)*pulse+Math.exp(-((distance/15)**2)/2)*(1-pulse))
      }
@@ -49,7 +52,8 @@ export default function MixingMotion({ kind, playing, knobs, tempo = .5 }: Props
    }
    if(playing && !reduced.matches) frame=requestAnimationFrame(draw)
   }
-  frame=requestAnimationFrame(draw)
+  // Draw before scheduling so rapid input updates cannot cancel the initial paint.
+  draw(performance.now())
   return ()=>cancelAnimationFrame(frame)
  },[kind,playing,knobs,tempo])
  return <canvas ref={canvasRef} width={kind==='jog'?500:150} height={500} role="img" aria-label={`${kind} 도트 애니메이션`} style={{width:'100%',height:'100%',objectFit:'contain'}} />
