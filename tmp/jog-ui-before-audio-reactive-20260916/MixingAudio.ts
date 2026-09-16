@@ -1,5 +1,4 @@
 export interface EqValues { high: number; mid: number; low: number }
-export interface AudioMotion { level: number; bass: number; mid: number; high: number }
 export function eqGain(value: number) { return (Math.max(0, Math.min(100, Number.isFinite(value) ? value : 50)) - 50) * .24 }
 
 // Shared by real-time playback and the offline frequency-response check.
@@ -30,10 +29,6 @@ export class MixingAudio {
  private since = 0
  private rate = 1
  private touching = false
- private analyser?: AnalyserNode
- private spectrum?: Uint8Array<ArrayBuffer>
- private waveform?: Float32Array<ArrayBuffer>
- private motion: AudioMotion = {level:0, bass:0, mid:0, high:0}
  playing = false
  get duration() { return this.buffers.master?.duration || 0 }
  get position() { return Math.min(this.duration, this.offset + (this.playing && !this.touching ? (this.context.currentTime - this.since) * this.rate : 0)) }
@@ -70,42 +65,6 @@ export class MixingAudio {
  setRate(value: number) { this.offset = this.position; this.rate = .9 + Math.max(0, Math.min(1, value)) * .2; this.since = this.context.currentTime; for (const {source} of this.sources) if (!this.touching) source.playbackRate.value = this.rate }
  setKnobs(value: EqValues) {
   this.equalizer.setValues(value)
- }
- // Analyse the final mix, including EQ and scratch, on a silent side branch.
- readMotion(): AudioMotion {
-  if (!this.playing || this.context.state !== 'running') {
-   this.motion.level = this.motion.bass = this.motion.mid = this.motion.high = 0
-   return this.motion
-  }
-  if (!this.analyser) {
-   this.analyser = this.context.createAnalyser()
-   this.analyser.fftSize = 1024
-   this.analyser.smoothingTimeConstant = .65
-   this.analyser.minDecibels = -85
-   this.analyser.maxDecibels = -20
-   this.spectrum = new Uint8Array(this.analyser.frequencyBinCount)
-   this.waveform = new Float32Array(this.analyser.fftSize)
-   this.limiter.connect(this.analyser)
-  }
-  const spectrum = this.spectrum!
-  const waveform = this.waveform!
-  this.analyser.getByteFrequencyData(spectrum)
-  this.analyser.getFloatTimeDomainData(waveform)
-  const binHz = this.context.sampleRate / this.analyser.fftSize
-  const band = (from:number, to:number) => {
-   const start = Math.max(1, Math.ceil(from / binHz))
-   const end = Math.min(spectrum.length, Math.ceil(to / binHz))
-   let energy = 0
-   for (let i=start;i<end;i++) energy += (spectrum[i]/255)**2
-   return end > start ? Math.sqrt(energy/(end-start)) : 0
-  }
-  let energy = 0
-  for (const value of waveform) energy += value*value
-  this.motion.level = Math.min(1, Math.sqrt(energy/waveform.length)*3)
-  this.motion.bass = band(40,250)
-  this.motion.mid = band(250,2000)
-  this.motion.high = band(2000,10000)
-  return this.motion
  }
  setTouch(value: boolean) {
   // Missing sample must never silence the selected song.

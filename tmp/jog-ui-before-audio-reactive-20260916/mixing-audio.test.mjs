@@ -6,32 +6,6 @@ class Node { gain=new Param(); Q=new Param(); threshold=new Param(); knee=new Pa
 class Context { currentTime=0; state='running'; destination={}; sources=[]; filters=[]; createDynamicsCompressor(){return new Node()} createGain(){return new Node()} createBiquadFilter(){const n=new Node();this.filters.push(n);return n} createBufferSource(){const n=new Node();this.sources.push(n);return n} async resume(){} async close(){this.state='closed'} async decodeAudioData(){return {duration:120}} }
 globalThis.AudioContext=Context
 globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(1)})
-test('motion reads separate frequency bands and RMS, reuses analyser, and clears on pause',()=>{
- const p=new MixingAudio()
- let creations=0
- let activeBin=2
- p.context.sampleRate=48000
- p.context.createAnalyser=()=>{
-  creations++
-  return {frequencyBinCount:512, getByteFrequencyData(data){data.fill(0);data[activeBin]=255},getFloatTimeDomainData(data){data.fill(.2)}}
- }
- assert.deepEqual(p.readMotion(),{level:0,bass:0,mid:0,high:0})
- assert.equal(creations,0)
- p.playing=true
- const bass={...p.readMotion()}
- assert.ok(bass.bass>0);assert.equal(bass.mid,0);assert.equal(bass.high,0)
- assert.ok(Math.abs(bass.level-.6)<.001)
- activeBin=20
- const mid={...p.readMotion()}
- assert.equal(mid.bass,0);assert.ok(mid.mid>0);assert.equal(mid.high,0)
- activeBin=100
- const high={...p.readMotion()}
- assert.equal(high.bass,0);assert.equal(high.mid,0);assert.ok(high.high>0)
- assert.equal(creations,1)
- p.pause()
- assert.deepEqual(p.readMotion(),{level:0,bass:0,mid:0,high:0})
- p.dispose()
-})
 test('jog holds position and resumes original music after repeated touch packets',async()=>{
  const p=new MixingAudio();for(const k of ['master','scratch'])await p.load(k,k)
  await p.play();p.context.currentTime=10;p.setTouch(true);assert.equal(p.position,10)

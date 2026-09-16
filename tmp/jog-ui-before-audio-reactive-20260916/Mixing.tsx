@@ -8,8 +8,6 @@ import { useMixingSession, type AudioKind } from './useMixingSession'
 import timelineBackground from '../assets/mixing-timeline.svg'
 
 const asset = (name: string) => `/images/mixing/${name}`
-// Set false to restore the original jog animation without changing other UI or audio.
-const AUDIO_REACTIVE_JOG = true
 export default function Mixing() {
  const {hardware} = useMixingSession()
  const queue = [selectedTrack('left'), selectedTrack('right')].filter((track): track is Track => Boolean(track))
@@ -23,7 +21,6 @@ export default function Mixing() {
 function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;onChange:(step:number)=>void;hardware:ReturnType<typeof useMixingSession>['hardware']}) {
  const {assets} = useMixingSession()
  const engine = useRef<MixingAudio | null>(null)
- const readJogMotion = useCallback(() => engine.current?.readMotion(), [])
  const [playing,setPlaying] = useState(false)
  const [position,setPosition] = useState(0)
  const [duration,setDuration] = useState(0)
@@ -90,7 +87,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
    <div className="mixing-panel mixing-eq"><MixingMotion kind="eq" playing={playing} knobs={hardware.knobs} />
     <div className="mixing-knob-inputs">{(['high','mid','low'] as const).map(key=><input key={key} type="range" aria-label={`${key.toUpperCase()} EQ`} aria-valuetext={`${((hardware.knobs[key]-50)*.24).toFixed(1)} dB`} title={`${key.toUpperCase()}: ${((hardware.knobs[key]-50)*.24).toFixed(1)} dB`} min="0" max="100" value={hardware.knobs[key]} onChange={event=>hardware.setKnobs(old=>({...old,[key]:Number(event.target.value)}))}/>)}</div></div>
    <div className="mixing-panel mixing-tempo"><MixingMotion kind="tempo" playing={playing} tempo={tempo} /><input className="mixing-tempo-input" type="range" aria-label="재생 속도" aria-valuetext={`${(.9+tempo*.2).toFixed(2)}배`} min="0" max="1" step=".01" value={tempo} onChange={event=>setTempo(Number(event.target.value))}/></div>
-   <div className="mixing-panel mixing-jog"><MixingMotion kind="jog" playing={playing} knobs={hardware.knobs} tempo={tempo} readMotion={AUDIO_REACTIVE_JOG ? readJogMotion : undefined} /><button className="mixing-jog-touch" aria-label="조그휠 터치 · 누르는 동안 샘플 재생" aria-pressed={hardware.touching} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);hardware.setScreenTouch(true)}} onPointerUp={()=>hardware.setScreenTouch(false)} onPointerCancel={()=>hardware.setScreenTouch(false)} onLostPointerCapture={()=>hardware.setScreenTouch(false)} onKeyDown={event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();hardware.setScreenTouch(true)}}} onKeyUp={()=>hardware.setScreenTouch(false)} onBlur={()=>hardware.setScreenTouch(false)}/></div>
+   <div className="mixing-panel mixing-jog"><MixingMotion kind="jog" playing={playing} /><button className="mixing-jog-touch" aria-label="조그휠 터치 · 누르는 동안 샘플 재생" aria-pressed={hardware.touching} onPointerDown={event=>{event.currentTarget.setPointerCapture(event.pointerId);hardware.setScreenTouch(true)}} onPointerUp={()=>hardware.setScreenTouch(false)} onPointerCancel={()=>hardware.setScreenTouch(false)} onLostPointerCapture={()=>hardware.setScreenTouch(false)} onKeyDown={event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();hardware.setScreenTouch(true)}}} onKeyUp={()=>hardware.setScreenTouch(false)} onBlur={()=>hardware.setScreenTouch(false)}/></div>
   </section>
   </div>
   <div className="mixing-timeline">
