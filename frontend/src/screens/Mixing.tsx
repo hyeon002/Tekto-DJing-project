@@ -103,6 +103,6 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
    <button aria-label="다른 선택 곡으로 전환" disabled={count<2} onClick={()=>onChange(1)}><img src={asset('shuffle.svg')} alt="" /></button>
   </nav>
   {error&&<p className="mixing-status" role="status">{error}</p>}
-  {(loading || !files.master) && <p className="mixing-status" role="status">{loading?'음원 준비 중…':'Setting에서 기본 음원을 등록해주세요.'}</p>}
+  {!loading && !files.master && <p className="mixing-status" role="status">Setting에서 기본 음원을 등록해주세요.</p>}
  </main>
 }
