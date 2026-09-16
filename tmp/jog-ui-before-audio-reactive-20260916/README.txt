@@ -1,0 +1,1 @@
+Before audio-reactive jog UI. Includes the fixed play/pause icons and all earlier changes. To restore only the original visual behavior, set AUDIO_REACTIVE_JOG = false in frontend/src/screens/Mixing.tsx. These snapshots are for reference; avoid overwriting later unrelated edits.
