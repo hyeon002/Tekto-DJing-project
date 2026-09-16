@@ -1,0 +1,43 @@
+.playlist{height:100dvh;overflow:hidden;display:grid;place-items:center;background:radial-gradient(ellipse at 36.64% 28.37%,#f4f8ff,#deeaff);font-family:Pretendard,'Segoe UI',sans-serif;color:#2a2a31}
+.playlist-stage{position:relative;width:min(100vw,160dvh);aspect-ratio:1.6;container-type:inline-size}
+.playlist-header{position:absolute;top:5%;left:3.75%;right:3.75%;height:6%;display:flex;align-items:center;justify-content:center}
+.playlist-header h1{margin:0;font-size:1.75cqw;font-weight:500;letter-spacing:-.04em;color:#7485a4}
+.playlist-back{position:absolute;left:0;width:3.75cqw;height:3.75cqw;display:grid;place-items:center;border:1px solid #e5ecfc;border-radius:50%;background:#f2f7ff}
+.playlist-back img{width:83.33%;height:83.33%}
+.playlist-orbit{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.playlist-orbit-item{position:absolute;width:9.19cqw;height:9.19cqw;border:.246cqw solid white;border-radius:.615cqw;padding:0;overflow:hidden;background:white;pointer-events:auto;cursor:pointer}
+.playlist-orbit-item .album-cover-frame{width:100%;height:100%}
+.playlist-selection{position:absolute;top:27.056%;left:50%;width:33.25%;transform:translateX(-50%)}
+.playlist-card{padding:1.25cqw 1.25cqw 1.75cqw;background:#f4f7ff;border-radius:1.25cqw}
+.playlist-covers{display:flex;gap:.75cqw}
+.playlist-covers .album-cover-frame{width:15cqw;height:15cqw;border-radius:.8225cqw}
+.playlist-details{display:flex;align-items:center;justify-content:space-between;gap:1cqw;margin-top:1.75cqw}
+.playlist-details>div{min-width:0}
+.playlist-details h2{margin:0;font-size:1.875cqw;font-weight:600;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.playlist-details p{display:flex;align-items:center;gap:.343cqw;margin:.5cqw 0 0;font:400 1.5cqw/1.2 'Roboto Mono',monospace;letter-spacing:-.08em;color:#a3abc1;white-space:nowrap}
+.playlist-play{border:0;padding:.6cqw;background:none;flex-shrink:0}
+.playlist-play img{display:block;width:1.3125cqw;height:1.5cqw}
+.playlist-actions{display:flex;justify-content:center;gap:.75cqw;margin-top:1.5cqw}
+.playlist-actions button{border:0;padding:0;width:5cqw;height:5cqw;border-radius:50%;background:#fafbff;cursor:pointer}
+.playlist-actions img{display:block;width:100%;height:100%}
+.playlist-actions button[aria-pressed=true]{box-shadow:0 0 0 3px #6f9bff}
+.playlist-pagination{position:absolute;top:91.556%;left:50%;transform:translateX(-50%);height:2.75cqw;display:flex;align-items:center}
+.playlist-pagination button{display:grid;place-items:center;width:.9cqw;height:100%;border:0;padding:0;background:none;cursor:pointer}
+.playlist-pagination span{width:.25cqw;height:1.625cqw;border-radius:10px;background:#c2cfec}
+.playlist-pagination [aria-current=true] span{height:2.75cqw;width:.375cqw;background:#6f9bff}
+.playlist a:focus-visible,.playlist button:focus-visible{outline:3px solid #467be9;outline-offset:4px}
+.playlist-message{position:absolute;top:79%;left:50%;transform:translateX(-50%);padding:10px 16px;border-radius:12px;background:#fbfcff;color:#7485a4;font-size:14px;text-align:center}
+.playlist-message button{border:0;background:none;color:#467be9;cursor:pointer;margin-left:10px;font:inherit}
+.playlist-empty{position:absolute;inset:35% 0 auto;text-align:center;color:#7485a4}.playlist-empty a{color:#467be9}
+@media(max-width:600px){
+ .playlist-stage{width:100%;height:100%;aspect-ratio:auto}
+ .playlist-header{top:24px;height:44px;left:20px;right:20px}.playlist-header h1{font-size:24px}.playlist-back{width:44px;height:44px}
+ .playlist-selection{top:23%;width:88%}.playlist-card{padding:3cqw 3cqw 4cqw;border-radius:4cqw}
+ .playlist-covers{gap:2cqw}.playlist-covers .album-cover-frame{width:40cqw;height:40cqw;border-radius:2cqw}
+ .playlist-details{margin-top:4cqw}.playlist-details h2{font-size:5cqw}.playlist-details p{font-size:3.5cqw;gap:1cqw;margin-top:2cqw}
+ .playlist-play{padding:2cqw}.playlist-play img{width:4cqw;height:4.6cqw}
+ .playlist-actions{margin-top:4cqw;gap:3cqw}.playlist-actions button{width:13cqw;height:13cqw}
+ .playlist-orbit-item{width:18cqw;height:18cqw;border-width:2px;border-radius:6px}.playlist-orbit-item:nth-child(3),.playlist-orbit-item:nth-child(4){visibility:hidden}
+ .playlist-pagination{top:91%;height:32px}.playlist-pagination button{width:6cqw}.playlist-pagination span{width:3px;height:16px}.playlist-pagination [aria-current=true] span{width:4px;height:28px}
+ .playlist-message{top:81%;width:85%;font-size:12px}
+}

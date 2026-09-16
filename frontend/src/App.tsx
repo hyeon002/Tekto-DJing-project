@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Home from './screens/Home'
 import MusicSelect from './screens/MusicSelect'
 import MusicSearch from './screens/MusicSearch'
+import Playlist from './screens/Playlist'
 import Mixing from './screens/Mixing'
 import Settings from './screens/Settings'
 import { MixingSession } from './screens/MixingSession'
@@ -20,7 +21,7 @@ function Routes() {
       const link = event.target instanceof Element ? event.target.closest('a') : null
       if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return
       const url = new URL(link.href)
-      if (url.origin !== window.location.origin || !['/', '/settings', '/music-select', '/music-search', '/mixing'].includes(url.pathname)) return
+      if (url.origin !== window.location.origin || !['/', '/settings', '/music-select', '/music-search', '/mixing', '/playlist'].includes(url.pathname)) return
       event.preventDefault()
       window.history.pushState(null, '', url)
       update()
@@ -35,6 +36,7 @@ function Routes() {
     return <Suspense fallback={<p>테스트 도구를 불러오는 중…</p>}><TestPage /></Suspense>
   }
   if (path === '/music-select') return <MusicSelect />
+  if (path === '/playlist' || (path === '/music-search' && new URLSearchParams(window.location.search).get('from') === 'playlist')) return <Playlist />
   if (path === '/music-search') return <MusicSearch />
   if (path === '/settings') return <Settings />
   if (path === '/mixing') return <Mixing />
