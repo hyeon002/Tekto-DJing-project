@@ -80,7 +80,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   <header className="mixing-header">
    <a className="mixing-back" href={selectionUrl('/music-select')} aria-label="음악 선택으로 돌아가기"><img src="/images/music-select/back.svg" alt="" /></a>
    <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(duration || track.duration)}</time></div>
-   <a className="mixing-finish" href="/" onClick={()=>engine.current?.pause()}>Finish</a>
+   <a className="mixing-finish" href="/playlist" onClick={()=>engine.current?.pause()}>Finish</a>
   </header>
   <div className="mixing-visual-area">
   <section className="mixing-panels" aria-label="EQ, 템포, 조그 시각화">
@@ -98,7 +98,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   <nav className="mixing-transport" aria-label="재생 컨트롤">
    <button aria-label="반복 재생" aria-pressed={repeat} onClick={()=>setRepeat(!repeat)}><img src={asset('repeat.svg')} alt="" /></button>
    <button aria-label="이전 곡" disabled={count<2} onClick={()=>onChange(-1)}><span className="mixing-skip"><img className="mixing-skip-bar" src={asset('bar.svg')} alt="" /><img src={asset('previous.svg')} alt="" /></span></button>
-   <button className="mixing-play" disabled={loading} aria-label={playing?'일시정지':'재생'} onClick={toggle}>{playing?<img src={asset('pause.svg')} alt="" />:<span aria-hidden="true">▶</span>}</button>
+   <button type="button" className="mixing-play" disabled={loading} aria-label={playing?'일시정지':'재생'} onClick={toggle}><img className={playing ? 'mixing-pause-icon' : 'mixing-play-artwork'} src={asset(playing ? 'pause.svg' : 'play.svg')} alt="" /></button>
    <button aria-label="다음 곡" disabled={count<2} onClick={()=>onChange(1)}><span className="mixing-skip mixing-skip-next"><img className="mixing-skip-bar" src={asset('bar.svg')} alt="" /><img src={asset('next.svg')} alt="" /></span></button>
    <button aria-label="다른 선택 곡으로 전환" disabled={count<2} onClick={()=>onChange(1)}><img src={asset('shuffle.svg')} alt="" /></button>
   </nav>

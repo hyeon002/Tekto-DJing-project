@@ -29,7 +29,7 @@ export default function Home({ videoSrc }: { videoSrc?: string }) {
             <span className="home-device"><span>TB-01</span><span>Battery</span></span>
             <span className="home-battery"><img src={asset('battery-92.png')} alt="배터리 92%" /></span>
           </a>
-          <a className="home-card home-playlist" href="/music-search?from=playlist" aria-label="Playlist — 앨범 검색">
+          <a className="home-card home-playlist" href="/playlist" aria-label="Playlist — 믹스셋 목록">
             <span className="home-card-heading"><img src={asset('headphones.svg')} alt="" />Playlist</span>
             <span className="home-albums" aria-hidden="true">
               {['left', 'left', 'center', 'right', 'right'].map((side, index) => <img key={index} className={`home-album home-album-${index}`} src={asset(`album-${side}.png`)} alt="" />)}
