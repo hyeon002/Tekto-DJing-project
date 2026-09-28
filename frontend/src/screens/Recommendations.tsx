@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import AlbumCover from '../components/AlbumCover'
 import TrackPreview from './TrackPreview'
 import { recommendationTracks, type RecommendationTrack } from './recommendationTracks'
@@ -15,40 +15,11 @@ const cardOffset = (index: number, center: number) => {
 
 export default function Recommendations() {
   const [center, setCenter] = useState(4)
-  const centerIndex = ((center % covers.length) + covers.length) % covers.length
   const [selected, setSelected] = useState<RecommendationTrack>()
-  const [interacting, setInteracting] = useState(false)
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [focused, setFocused] = useState(false)
   const [dragging, setDragging] = useState(false)
-  const direction = useRef(1)
   const touchStart = useRef<number | null>(null)
   const mouseTravel = useRef({ x: 0, distance: 0, lastStep: 0, dragged: false })
   const mousePointer = useRef<number | null>(null)
-  const hoveringCenter = hoveredIndex === centerIndex
-
-  useEffect(() => {
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const schedule = () => {
-      clearTimeout(timer)
-      if (motion.matches || interacting || hoveringCenter || focused || selected || document.hidden) return
-      const advance = () => {
-        setCenter(current => {
-          const index = ((current % covers.length) + covers.length) % covers.length
-          if (index === covers.length - 1) direction.current = -1
-          if (index === 0) direction.current = 1
-          return current + direction.current
-        })
-        timer = setTimeout(advance, 800)
-      }
-      timer = setTimeout(advance, 1600)
-    }
-    schedule()
-    motion.addEventListener('change', schedule)
-    document.addEventListener('visibilitychange', schedule)
-    return () => { clearTimeout(timer); motion.removeEventListener('change', schedule); document.removeEventListener('visibilitychange', schedule) }
-  }, [interacting, hoveringCenter, focused, selected])
 
   // Keep a continuous position so crossing the last/first card also animates.
   const move = (step: number) => setCenter(current => current + step)
@@ -63,10 +34,6 @@ export default function Recommendations() {
         <a className="recommendations-search" href={selected ? `/music-search?left=${selected.id}&deck=right` : '/music-search?deck=left'} aria-label="음악 검색"><img src="/images/recommendations/search.svg" alt="" />Search Anything</a>
       </header>
       <section className={`recommendations-carousel${dragging ? ' is-dragging' : ''}`} aria-label="추천 앨범 — 클릭한 채 좌우로 드래그하거나 방향키로 이동" aria-roledescription="carousel" tabIndex={0}
-        onPointerEnter={event => {
-          if (event.pointerType !== 'mouse') return
-          setInteracting(true)
-        }}
         onPointerDown={event => {
           if (event.pointerType !== 'mouse' || event.button !== 0) return
           mousePointer.current = event.pointerId
@@ -93,11 +60,10 @@ export default function Recommendations() {
         onPointerUp={() => { mousePointer.current = null; setDragging(false) }}
         onPointerCancel={() => { mousePointer.current = null; setDragging(false) }}
         onLostPointerCapture={() => { mousePointer.current = null; setDragging(false) }}
-        onPointerLeave={() => { setHoveredIndex(null); setInteracting(false); mouseTravel.current.distance = 0 }}
-        onFocus={() => setFocused(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}
-        onTouchStart={event => { touchStart.current = event.touches[0].clientX; setInteracting(true) }}
-        onTouchEnd={event => { const delta = event.changedTouches[0].clientX - (touchStart.current ?? event.changedTouches[0].clientX); if (Math.abs(delta) > 35) { event.preventDefault(); move(delta < 0 ? 1 : -1) } touchStart.current = null; setInteracting(false) }}
-        onTouchCancel={() => { touchStart.current = null; setInteracting(false) }}
+        onPointerLeave={() => { mouseTravel.current.distance = 0 }}
+        onTouchStart={event => { touchStart.current = event.touches[0].clientX }}
+        onTouchEnd={event => { const delta = event.changedTouches[0].clientX - (touchStart.current ?? event.changedTouches[0].clientX); if (Math.abs(delta) > 35) { event.preventDefault(); move(delta < 0 ? 1 : -1) } touchStart.current = null }}
+        onTouchCancel={() => { touchStart.current = null }}
         onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1) } }}>
         {covers.map((item, index) => {
           const offset = cardOffset(index, center)
@@ -108,8 +74,6 @@ export default function Recommendations() {
           return <button type="button" key={key} style={style}
             className={`recommendation-card${offset === 0 ? ' is-center' : ''}${selected?.id === item.track.id ? ' is-selected' : ''}`}
             aria-label={`${item.track.title} — ${item.track.artist}`} aria-pressed={selected?.id === item.track.id}
-            onPointerEnter={event => { if (event.pointerType !== 'touch') setHoveredIndex(index) }}
-            onPointerLeave={() => setHoveredIndex(null)}
             onFocus={event => { if (event.currentTarget.matches(':focus-visible')) centerCard(index) }}
             onClick={event => {
               if (event.detail > 0 && mouseTravel.current.dragged) { mouseTravel.current.dragged = false; return }
