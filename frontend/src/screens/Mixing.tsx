@@ -82,8 +82,8 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
  return <main className="mixing" aria-label="Mixing">
   <header className="mixing-header">
    <a className="mixing-back" href={selectionUrl('/music-select')} aria-label="음악 선택으로 돌아가기"><img src="/images/music-select/back.svg" alt="" /></a>
-   <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(duration || track.duration)}</time></div>
-   <a className="mixing-finish" href="/playlist" onClick={()=>engine.current?.pause()}>Finish</a>
+   <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(track.duration)}</time></div>
+   <a className="mixing-finish" href="/" onClick={()=>engine.current?.pause()}>Finish</a>
   </header>
   <div className="mixing-visual-area">
   <section className="mixing-panels" aria-label="EQ, 템포, 조그 시각화">

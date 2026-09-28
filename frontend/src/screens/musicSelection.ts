@@ -1,8 +1,11 @@
+import { recommendationTracks } from './recommendationTracks'
+
 export type Deck = 'left' | 'right'
-export interface Track { id: number; title: string; artist: string; cover: string; duration?: number; audioSrc?: string }
+export interface Track { id: number; title: string; artist: string; cover: string; duration?: number; durationKind?: 'album'; audioSrc?: string }
 // Set audioSrc to a real audio file URL when supplied.
-// Durations are distinct demo values, not verified recording lengths.
+// Legacy search entries below the recommendations still use demo durations.
 export const tracks: Track[] = [
+ ...recommendationTracks,
  {id:1,title:'Immunity',artist:'Clairo',cover:'/images/music-search/1.png',duration:214},
  {id:2,title:'This is How Tomorrow Moves',artist:'beabadobee',cover:'/images/music-search/2.png',duration:252},
  {id:3,title:'Beatopia',artist:'beabadobee',cover:'/images/music-search/3.png',duration:227},
