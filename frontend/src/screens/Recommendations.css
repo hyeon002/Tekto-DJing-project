@@ -1,0 +1,62 @@
+.recommendations { --rec-scale: calc(100vw / 1600px); min-height: 100svh; overflow: hidden; color: #2a2a31; font-family: Pretendard, 'Segoe UI', sans-serif; background: radial-gradient(ellipse at 36.64% 28.37%, #bed5ff, #f0f5ff 100%); }
+.recommendations-canvas { position: relative; width: 1600px; height: max(1000px, calc(100svh / var(--rec-scale))); zoom: var(--rec-scale); }
+.recommendations-back { position: absolute; top: 49.56px; left: 59.65px; display: grid; place-items: center; width: 60px; height: 60px; border: 1px solid #e5ecfc; border-radius: 50%; background: #fbfcff; }
+.recommendations-back img { display: block; }
+.recommendations-intro { position: absolute; top: 23.4%; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; }
+.recommendations-intro p { margin: 0; font-size: 28px; line-height: 1.2; color: #719dff; font-weight: 500; letter-spacing: -1.4px; }
+.recommendations-intro h1 { margin: -7px 0 34px; font-size: 70px; line-height: 1.2; font-weight: 500; color: #77a0ff; letter-spacing: -3.5px; }
+.recommendations-intro strong { font-weight: 600; color: transparent; background: linear-gradient(90deg, #004eff, #91b2ff); background-clip: text; }
+.recommendations-search { display: flex; align-items: center; justify-content: center; gap: 17px; width: 400px; height: 60px; border: 1px solid white; border-radius: 50px; color: #a5b4d7; background: #dfeaff; box-shadow: 0 0 21px #fff9, inset 0 0 23.7px white; font-size: 20px; font-weight: 500; letter-spacing: -1px; text-decoration: none; }
+.recommendations-search img { display: block; transform: scaleY(-1); }
+.recommendations-carousel { position: absolute; top: 50%; left: 0; width: 100%; height: 273px; touch-action: pan-y; user-select: none; }
+.recommendation-card { position: absolute; left: 50%; top: 50%; width: var(--card-size); height: var(--card-size); transform: translate(calc(-50% + var(--card-offset)), -50%); padding: 0; border: 0; border-radius: calc(var(--card-size) * .0586); background: none; font: inherit; text-align: left; cursor: pointer; transition: transform 350ms cubic-bezier(.22, .61, .36, 1), width 350ms cubic-bezier(.22, .61, .36, 1), height 350ms cubic-bezier(.22, .61, .36, 1), box-shadow 250ms ease; }
+.recommendation-cover { width: 100%; height: 100%; border-radius: inherit; opacity: var(--card-opacity); transition: opacity 250ms ease; }
+.recommendations-carousel, .recommendation-card { cursor: grab; }
+.recommendations-carousel.is-dragging, .recommendations-carousel.is-dragging .recommendation-card { cursor: grabbing; }
+.recommendation-card.is-center { box-shadow: 0 0 56.9px 24px #bacfff; }
+.recommendation-card.is-center::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 50px #a9c3ff; pointer-events: none; }
+.recommendation-info { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 12px; padding: 31px 26px; border-radius: inherit; background: rgb(111 155 255 / 65%); opacity: 0; color: white; transition: opacity 220ms ease; }
+.recommendation-info strong { font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -.96px; }
+.recommendation-info > span { font-size: 16px; line-height: 1.2; color: #dce1f0; letter-spacing: -.64px; }
+.recommendation-card.is-center:is(:hover, :focus-visible, .is-selected) .recommendation-info { opacity: 1; }
+.recommendation-card.is-center:is(:hover, :focus-visible, .is-selected) { box-shadow: 0 0 58px #a3bfff; z-index: 1; }
+.recommendation-card.is-center:is(:hover, :focus-visible, .is-selected) .recommendation-cover { opacity: 1; }
+.recommendation-card.is-selected { outline: 3px solid #dae5ff; outline-offset: -3px; }
+.recommendation-card.is-selected::after { box-shadow: inset 0 0 0 3px #dae5ff; }
+.recommendation-card:not(.is-center) .recommendation-info { opacity: 0; transition: none; }
+.recommendations a:focus-visible, .recommendations button:focus-visible, .recommendations-carousel:focus-visible { outline: 3px solid #467be9; outline-offset: 5px; }
+.recommendations .track-preview { bottom: calc(5svh / var(--rec-scale)); width: 890px; zoom: var(--rec-scale); }
+.recommendations .track-preview-pill { height: 90px; padding: 8px 28px 8px 14px; gap: 12px; }
+.recommendations .track-preview-cover { width: 60px; height: 60px; }
+.recommendations .track-preview-title { width: 228px; flex: none; gap: 5px; }
+.recommendations .track-preview-title strong { font-size: 24px; }
+.recommendations .track-preview-title span { font-size: 16px; }
+.recommendations .track-preview-toggle { margin-right: 12px; }
+.recommendations .track-preview-wave { display: block; flex-shrink: 0; width: 312px; height: 40px; margin: 0; }
+.recommendations .track-preview-wave > img { width: auto; height: auto; position: absolute; top: -1.5px; left: -1.5px; }
+.recommendations .track-preview time { display: block; flex-shrink: 0; white-space: nowrap; font-size: 18px; }
+.recommendations .track-preview-add { width: 90px; height: 90px; }
+@media (max-width: 700px) {
+  .recommendations { --rec-scale: .8; }
+  .recommendations-canvas { width: calc(100vw / .8); min-height: 780px; height: calc(100svh / .8); }
+  .recommendations-back { left: 24px; top: 30px; }
+  .recommendations-intro { top: 160px; }
+  .recommendations-intro p { font-size: 20px; letter-spacing: -.8px; }
+  .recommendations-intro h1 { font-size: 36px; letter-spacing: -1.8px; margin: 6px 0 30px; }
+  .recommendations-search { width: 340px; }
+  .recommendations-carousel { top: 370px; }
+  .recommendations .track-preview { zoom: 1; width: calc(100vw - 28px); bottom: 24px; }
+  .recommendations .track-preview-pill { height: 64px; padding: 8px; gap: 8px; }
+  .recommendations .track-preview-cover { width: 40px; height: 40px; }
+  .recommendations .track-preview-title { width: auto; flex: 1; }
+  .recommendations .track-preview-title strong { font-size: 15px; }
+  .recommendations .track-preview-title span { font-size: 12px; }
+  .recommendations .track-preview-toggle { margin: 0; }
+  .recommendations .track-preview-wave { display: none; }
+  .recommendations .track-preview time { font-size: 12px; }
+  .recommendations .track-preview-add { width: 64px; height: 64px; }
+}
+@media (prefers-reduced-motion: reduce) { .recommendations *, .recommendations *::after { transition: none; } }
+
+
+

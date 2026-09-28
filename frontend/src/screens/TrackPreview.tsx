@@ -2,7 +2,7 @@ import AlbumCover from '../components/AlbumCover'
 import { useEffect, useRef, useState } from 'react'
 import { formatTime, selectionUrl, type Deck, type Track } from './musicSelection'
 import './TrackPreview.css'
-export default function TrackPreview({track,deck}:{track:Track;deck:Deck}) {
+export default function TrackPreview({track,deck,addHref,addLabel,previewCover,waveSrc='/images/player/wave.svg'}:{track:Track;deck:Deck;addHref?:string;addLabel?:string;previewCover?:string;waveSrc?:string}) {
  const audio = useRef<HTMLAudioElement>(null)
  const [playing,setPlaying] = useState(false)
  const [position,setPosition] = useState(0)
@@ -22,12 +22,12 @@ export default function TrackPreview({track,deck}:{track:Track;deck:Deck}) {
  }
  return <aside className="track-preview" aria-label={`${track.title} 미리듣기`}>
   <div className="track-preview-row"><div className="track-preview-pill">
-   <AlbumCover className={`track-preview-cover${track.id === 5 ? ' album-cover-trim' : ''}`} src={track.cover} alt="" />
+   <AlbumCover className={`track-preview-cover${track.id === 5 ? ' album-cover-trim' : ''}`} src={previewCover || track.cover} alt="" />
    <div className="track-preview-title"><strong>{track.title}</strong><span>{track.artist}</span></div>
    <button type="button" className="track-preview-toggle" disabled={!track.audioSrc} onClick={toggle} aria-label={playing?'일시정지':'재생'}><img className={playing ? 'track-preview-pause-icon' : 'track-preview-play-icon'} src={playing ? '/images/player/pause.svg' : '/images/player/play.svg'} alt="" /></button>
-   <div className="track-preview-wave"><img src="/images/player/wave.svg" alt="" />{track.audioSrc && <input type="range" aria-label="재생 위치" min="0" max={duration||1} step="0.1" value={position} disabled={!duration} onChange={event=>{if(audio.current){audio.current.currentTime=Number(event.target.value);setPosition(Number(event.target.value))}}} />}</div>
-   <time>{formatTime(duration || track.duration).padStart(5, '0')}</time>
-  </div><a className="track-preview-add" href={selectionUrl('/music-select',deck,track.id)} aria-label={`${track.title} ${deck==='left'?'왼쪽':'오른쪽'} 덱에 추가`}><img src="/images/player/plus.svg" alt="" /></a></div>
+   <div className="track-preview-wave"><img src={waveSrc} alt="" />{track.audioSrc && <input type="range" aria-label="재생 위치" min="0" max={duration||1} step="0.1" value={position} disabled={!duration} onChange={event=>{if(audio.current){audio.current.currentTime=Number(event.target.value);setPosition(Number(event.target.value))}}} />}</div>
+   <time title={track.durationKind === 'album' ? '앨범 전체 재생 시간' : '곡 재생 시간'}>{track.durationKind === 'album' && !duration ? '총 ' : ''}{formatTime(duration || track.duration).padStart(5, '0')}</time>
+  </div><a className="track-preview-add" href={addHref || selectionUrl('/music-select',deck,track.id)} aria-label={addLabel || `${track.title} ${deck==='left'?'왼쪽':'오른쪽'} 덱에 추가`}><img src="/images/player/plus.svg" alt="" /></a></div>
   {track.audioSrc && error && <p className="track-preview-status" role="status">{error}</p>}
   <audio ref={audio} src={track.audioSrc} preload="metadata" onPlay={()=>{setPlaying(true);setError('')}} onPause={()=>setPlaying(false)} onEnded={()=>setPlaying(false)} onTimeUpdate={event=>setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event=>setDuration(Number.isFinite(event.currentTarget.duration)?event.currentTarget.duration:0)} onError={()=>{setPlaying(false);setError('음원을 불러올 수 없어요.')}} />
  </aside>

@@ -31,7 +31,7 @@
 .home-header { zoom: var(--home-scale); display: flex; align-items: center; gap: 20px; position: relative; width: 447px; height: 90px; }
 .home-avatar { position: relative; flex-shrink: 0; overflow: hidden; width: 90px; height: 90px; border: 4px solid #e2e9fa; border-radius: 50%; background: white; }
 .home-avatar-base { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.home-avatar-portrait { position: absolute; width: 162.387px; max-width: none; height: 286.578px; right: -23.198px; top: -26px; transform: scaleX(-1); }
+.home-avatar-portrait { position: absolute; width: 162.387px; max-width: none; height: 286.578px; right: -30px; top: -26px; transform: scaleX(-1); }
 .home-profile { flex: 1; min-width: 0; }
 .home-profile p { margin: 0 0 12px; color: var(--home-muted); font-size: 20px; font-weight: 500; line-height: 1.2; letter-spacing: -.8px; white-space: nowrap; }
 .home-profile h1 { margin: 0; font-size: 40px; line-height: 1.2; font-weight: 600; letter-spacing: -1.2px; }
@@ -49,8 +49,10 @@
 .home-mixing::before { background: white; opacity: 0; transition: opacity 280ms ease; }
 .home-mixing::after { box-shadow: inset 0 0 61.583px white; transition: box-shadow 280ms ease; }
 .home-mixing-title { position: absolute; top: 17px; left: 18px; font-size: 36px; line-height: 1.1; font-weight: 600; letter-spacing: -1.44px; color: white; background: linear-gradient(104.636deg, #6678ff 27.045%, #0073ff 73.335%); background-clip: text; -webkit-background-clip: text; transition: color 280ms ease; }
-.home-mixing-eq { position: absolute; left: 150.63px; top: 160.5px; width: 144.129px; height: 72.26px; opacity: 0; mix-blend-mode: multiply; pointer-events: none; transition: opacity 280ms ease; }
+.home-mixing-eq { position: absolute; left: 150.63px; top: 160.5px; width: 144.129px; height: 72.26px; opacity: 0; mix-blend-mode: multiply; pointer-events: none; transition: opacity 360ms ease; }
 .home-mixing-eq img, .home-mixing-eq video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+.home-mixing-eq video { opacity: 0; transition: opacity 200ms ease; }
+.home-mixing-eq video[data-ready='true'] { opacity: 1; }
 .home-mixing[data-active='true'] { box-shadow: 0 0 20px rgb(153 192 255 / 64%); }
 .home-mixing[data-active='true']::before { opacity: 1; }
 .home-mixing[data-active='true']::after { box-shadow: inset 0 0 61.583px #d9deff; }
