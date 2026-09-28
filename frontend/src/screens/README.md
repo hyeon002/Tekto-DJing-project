@@ -2,13 +2,16 @@
 
 ## 화면과 이동
 
-- `Home.tsx` (`/`): 음악 선택, Setting, Playlist로 이동합니다.
+- `Home.tsx` (`/`): 전체 화면 컨트롤러 배경 위에서 음악 선택, Setting, Playlist로 이동합니다. Today’s TOP 10 카드는 기존 Popular 음악 검색(`/music-search`)에 연결하며 실시간 순위 데이터는 미연결입니다. 배경은 Figma에서 추출한 정지 이미지이며 `videoSrc`를 전달하면 영상으로 표시합니다.
+- `HomeMixingCard.tsx`: Mixing 카드의 마우스 호버·키보드 포커스에서 흰 배경, 파란 그라데이션 글자, EQ 루프를 표시합니다. EQ 영상은 제공된 `녹음 2026-09-28 223303.mp4`의 5~7.5초 중 파형 영역만 추출한 2.5초 무음 루프입니다. 이탈 시 재생을 멈추고 처음으로 되돌리며, 동작 줄이기 설정에서는 Figma EQ 정지 이미지를 표시합니다.
 - `Settings.tsx` (`/settings`): 조그휠·노브 연결, 기본 음원·스크래치 음원 선택. USB 및 믹싱 시작 버튼은 없습니다.
 - `MusicSelect.tsx` (`/music-select`): 좌우 앨범 선택. + 링크는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
 - `MusicSearch.tsx` (`/music-search`): 앨범·아티스트 검색. 카드 선택 후 하단 플레이어의 +로 앨범을 확정합니다.
 - `Playlist.tsx` (`/playlist`): Figma Mixing List 예시 목록. 주변 앨범/하단 표시/방향키로 선택하며 즐겨찾기, 삭제·취소, 페이지 링크 복사를 제공합니다. 변경은 화면 내 임시 상태이며 실제 믹스셋 저장·녹음 파일 재생은 미연결입니다. 기존 `/music-search?from=playlist` 링크도 이 화면을 표시합니다.
 - `Mixing.tsx` (`/mixing?left=...&right=...`): 선택한 앨범이 하나 이상이면 진입합니다. 제목·아티스트·커버는 선택 앨범과 동일합니다.
 - `ModuleSettings.tsx`: 이전 모듈 진단 컴포넌트로, 현재 `/settings`에 사용하지 않습니다.
+
+EQ 재생에는 `mixing-eq-clean.mp4`, 정지 표시에는 `mixing-eq-clean.png`를 사용합니다. 원본의 부드러운 배경 성분을 제거한 뒤 흰색 배경으로 정규화했으며, CSS multiply 합성으로 파형만 카드 위에 표시합니다.
 
 앱 내부 링크는 `App.tsx`에서 처리하고, `MixingSession`이 연결·노브·음원 상태를 유지합니다.
 브라우저 새로고침은 새 세션을 시작합니다. 로컬 선택 파일은 서버에 업로드하지 않습니다.
