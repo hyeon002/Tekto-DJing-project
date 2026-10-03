@@ -13,7 +13,7 @@
 
 ## 이전 진단 엔진
 
-`AudioCore.ts`는 `/test`에서 사용하는 이전 프로토타입입니다. 현재 Setting과 믹싱 화면의 동작은 `MixingAudio.ts`를 기준으로 확인합니다.
+`AudioCore.ts`는 이전 진단용 오디오 프로토타입입니다. 현재 Setting과 믹싱 화면의 동작은 `MixingAudio.ts`를 기준으로 확인합니다.
 
 ## 검증
 

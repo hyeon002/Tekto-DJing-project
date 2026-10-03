@@ -21,7 +21,6 @@ T/K 태그나 BLE-MIDI 헤더는 붙지 않습니다. 노브의 T/B/V 필드명�
 
 - `bleLinkShared.ts`, `SliderBleLink.ts`: 이전 광고 방식 슬라이더 및 공용 진단 코드. 제조사 ID 0xFFFF 권한 처리는 이 경로에만 해당합니다.
 - `knob.ts`, `jogwheel.ts`, `gattNotifyConnection.ts`: 이전 모듈 설정용 커스텀 GATT 구현. 현재 Setting에서는 사용하지 않습니다.
-- `/test`: 현재 JogBleLink/KnobBleLink를 이용한 개발 진단 패널.
 - `/test/ble.html`: 독립 BLE 탐색 도구. 커스텀 UUID를 사용하려면 도구의 추가 UUID 입력에 서비스 UUID를 지정합니다.
 
 수정 코드는 배포 후 장치를 다시 선택해 새 서비스 권한을 받아야 합니다. 실제 기기의 연결과 값 수신은 실기 확인이 필요합니다.

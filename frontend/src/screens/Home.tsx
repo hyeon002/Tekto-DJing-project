@@ -37,7 +37,7 @@ export default function Home({ videoSrc }: { videoSrc?: string }) {
             </span>
             <span className="home-recent"><span>recent</span><span>drop dead - Olivia Rodrigo</span></span>
           </a>
-          <a className="home-card home-top-ten" href="/music-search" aria-label="Today’s TOP 10 — 인기 음악 둘러보기">
+          <a className="home-card home-top-ten" href="/recommendations" aria-label="Today’s TOP 10 — 오늘의 추천 음악 둘러보기">
             <span className="home-card-heading"><span className="home-note-icon"><img src={asset('top-ten-note.svg')} alt="" /></span><span>Today’s<br />TOP 10</span></span>
             <img className="home-top-ten-disc" src={asset('top-ten-disc.svg')} alt="" />
           </a>

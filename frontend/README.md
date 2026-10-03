@@ -23,9 +23,9 @@ node --test tests/ble-input.test.cjs tests/mixing-audio.test.mjs
 - `src/screens/Mixing.tsx`: 선택 앨범 표시, 재생 컨트롤, 입력과 오디오·도트 UI 연결.
 - `src/screens/MixingMotion.tsx`: Canvas 도트 렌더링. 노브·슬라이더 값 반영 및 조그 장식 회전.
 - `src/core/audio/MixingAudio.ts`: 믹싱 화면용 Web Audio 엔진. 원곡에 적용하는 High/Mid/Low EQ와 스크래치 전환.
-- `src/core/audio/AudioCore.ts`: 기존 `/test` 진단용 오디오 엔진. 믹싱 화면용 엔진과 별개입니다.
+- `src/core/audio/AudioCore.ts`: 이전 진단용 오디오 엔진. 믹싱 화면용 엔진과 별개입니다.
 - `src/core/ble/`: BLE 연결과 패킷 해석. React에 의존하지 않습니다.
-- `src/core/serial/`, `src/dev/`, `tools/`: 기존 USB Serial 및 개발 진단 도구.
+- `src/core/serial/`: 이전 USB Serial 연결 코드.
 - `src/visualizer/`: 기존 진단용 React 비주얼라이저. 믹싱 화면은 `MixingMotion.tsx`를 사용합니다.
 - `public/audio/videoplayback.mp3`: 기본 믹싱 음원.
 - `tests/`: 모의 BLE 입력·연결 해제, 오디오 전환, EQ 매핑 테스트.
