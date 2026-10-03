@@ -10,7 +10,6 @@
 - `MusicSearch.tsx` (`/music-search`): 앨범·아티스트 검색. 카드 선택 후 하단 플레이어의 +로 앨범을 확정합니다.
 - `Playlist.tsx` (`/playlist`): Figma Mixing List 예시 목록. 주변 앨범/하단 표시/방향키로 선택하며 즐겨찾기, 삭제·취소, 페이지 링크 복사를 제공합니다. 변경은 화면 내 임시 상태이며 실제 믹스셋 저장·녹음 파일 재생은 미연결입니다. 기존 `/music-search?from=playlist` 링크도 이 화면을 표시합니다.
 - `Mixing.tsx` (`/mixing?left=...&right=...`): 선택한 앨범이 하나 이상이면 진입합니다. 제목·아티스트·커버는 선택 앨범과 동일합니다.
-- `ModuleSettings.tsx`: 이전 모듈 진단 컴포넌트로, 현재 `/settings`에 사용하지 않습니다.
 
 EQ 재생에는 `mixing-eq-clean.mp4`, 정지 표시에는 `mixing-eq-clean.png`를 사용합니다. 원본의 부드러운 배경 성분을 제거한 뒤 흰색 배경으로 정규화했으며, CSS multiply 합성으로 파형만 카드 위에 표시합니다.
 

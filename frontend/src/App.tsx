@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Home from './screens/Home'
 import MusicSelect from './screens/MusicSelect'
 import Recommendations from './screens/Recommendations'
@@ -7,8 +7,6 @@ import Playlist from './screens/Playlist'
 import Mixing from './screens/Mixing'
 import Settings from './screens/Settings'
 import { MixingSession } from './screens/MixingSession'
-
-const TestPage = lazy(() => import('./dev/TestPage'))
 
 function App() {
   return <MixingSession><Routes /></MixingSession>
@@ -33,9 +31,6 @@ function Routes() {
     return () => { document.removeEventListener('click', navigate); window.removeEventListener('popstate', update) }
   }, [])
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
-  if (path === '/test') {
-    return <Suspense fallback={<p>테스트 도구를 불러오는 중…</p>}><TestPage /></Suspense>
-  }
   if (path === '/music-select') return <MusicSelect />
   if (path === '/recommendations') return <Recommendations />
   if (path === '/playlist' || (path === '/music-search' && new URLSearchParams(window.location.search).get('from') === 'playlist')) return <Playlist />

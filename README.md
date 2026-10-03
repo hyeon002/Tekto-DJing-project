@@ -22,12 +22,10 @@ npm run dev
 | `/music-select` | 좌우 앨범 선택 및 믹싱 진입 |
 | `/music-search` | 앨범·아티스트 검색과 선택 |
 | `/mixing?left=4` | 선택한 앨범 정보를 표시하는 믹싱 화면 |
-| `/test` | 오디오·BLE·USB Serial 개발용 진단 도구 |
 | `/test/ble.html` | 독립 BLE 수신 검증 도구 |
 
 Home의 Setting에서 장치를 연결한 뒤 Home으로 돌아와 음악을 선택합니다.
 Setting에는 조그휠과 노브 연결 버튼만 표시하며, USB 연결과 믹싱 시작 버튼은 없습니다.
-USB Serial 진단 기능은 `/test`에 남아 있습니다.
 
 ## 음원
 
