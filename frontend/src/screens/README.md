@@ -2,7 +2,7 @@
 
 ## 화면과 이동
 
-- `Home.tsx` (`/`): 전체 화면 컨트롤러 배경 위에서 음악 선택, Setting, Playlist로 이동합니다. Today’s TOP 10 카드는 Today’s recommendation(`/recommendations`)에 연결하며 실시간 순위 데이터는 미연결입니다. 배경은 Figma에서 추출한 정지 이미지이며 `videoSrc`를 전달하면 영상으로 표시합니다.
+- `Home.tsx` (`/`): 전체 화면 컨트롤러 배경 위에서 음악 선택, Setting, Playlist로 이동합니다. Today’s TOP 10 카드는 Today’s recommendation(`/recommendations`)에 연결하며 실시간 순위 데이터는 미연결입니다. 배경은 `/audio/BackgroundVid.mp4`를 음소거 상태로 자동 반복 재생하며, 로딩 중에는 컨트롤러 정지 이미지를 표시합니다. `videoSrc`로 배경 영상 경로를 변경할 수 있습니다.
 - `HomeMixingCard.tsx`: Mixing 카드의 마우스 호버·키보드 포커스에서 흰 배경, 파란 그라데이션 글자, EQ 루프를 표시합니다. EQ 영상은 제공된 `녹음 2026-09-28 223303.mp4`의 5~7.5초 중 파형 영역만 추출한 2.5초 무음 루프입니다. 이탈 시 재생을 멈추고 처음으로 되돌리며, 동작 줄이기 설정에서는 Figma EQ 정지 이미지를 표시합니다.
 - `Settings.tsx` (`/settings`): 조그휠·노브 연결, 기본 음원·스크래치 음원 선택. USB 및 믹싱 시작 버튼은 없습니다.
 - `MusicSelect.tsx` (`/music-select`): 좌우 앨범 선택. + 링크는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
@@ -51,4 +51,3 @@ npm run build
 npm run lint
 node --test tests/ble-input.test.cjs tests/mixing-audio.test.mjs
 ```
-
