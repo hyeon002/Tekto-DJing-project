@@ -4,8 +4,7 @@ import './Home.css'
 
 const asset = (name: string) => `/images/home/${name}`
 
-// Supply the final video URL here via props when the video is ready.
-export default function Home({ videoSrc }: { videoSrc?: string }) {
+export default function Home({ videoSrc = '/audio/BackgroundVid.mp4' }: { videoSrc?: string }) {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   return (
     <main className="home" aria-label="Tekto Home">
