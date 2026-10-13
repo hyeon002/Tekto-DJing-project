@@ -4,7 +4,7 @@ import './MusicSearch.css'
 import TrackPreview from './TrackPreview'
 import { tracks, selectionUrl, type Track } from './musicSelection'
 
-// Design reference data only; no streaming catalogue or playable audio is connected yet.
+// Design reference catalogue with locally supplied demo audio.
 const albums = [
   { id: 1, title: 'Immunity', artist: 'Clairo', kind: 'Album', tracks: 11, minutes: 40 },
   { id: 2, title: 'This is How Tomorrow Moves', artist: 'beabadobee', kind: 'Album', tracks: 14, minutes: 41 },

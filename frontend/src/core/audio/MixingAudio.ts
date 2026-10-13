@@ -1,3 +1,26 @@
+// Share pending downloads and decoded buffers across preview and mixing players.
+// Keep only the three most recently requested recordings to bound PCM memory.
+const decodedAudio = new Map<string, Promise<AudioBuffer>>()
+export function prepareAudio(url: string, decoder?: BaseAudioContext): Promise<AudioBuffer> {
+ const cached = decodedAudio.get(url)
+ if(cached) {
+  decodedAudio.delete(url)
+  decodedAudio.set(url, cached)
+  return cached
+ }
+ const pending = (async () => {
+  const response = await fetch(url)
+  if(!response.ok) throw new Error('음원을 불러올 수 없어요.')
+  const bytes = await response.arrayBuffer()
+  const context = decoder || new OfflineAudioContext(1, 1, 44100)
+  return context.decodeAudioData(bytes)
+ })()
+ decodedAudio.set(url, pending)
+ if(decodedAudio.size > 3) decodedAudio.delete(decodedAudio.keys().next().value!)
+ void pending.catch(() => {if(decodedAudio.get(url) === pending) decodedAudio.delete(url)})
+ return pending
+}
+
 export interface EqValues { high: number; mid: number; low: number }
 export interface AudioMotion { level: number; bass: number; mid: number; high: number }
 export function eqGain(value: number) { return (Math.max(0, Math.min(100, Number.isFinite(value) ? value : 50)) - 50) * .24 }
@@ -49,9 +72,7 @@ export class MixingAudio {
   this.limiter.connect(this.context.destination)
  }
  async load(kind: 'master' | 'scratch', url: string) {
-  const response = await fetch(url)
-  if (!response.ok) throw new Error('음원을 불러올 수 없어요.')
-  const buffer = await this.context.decodeAudioData(await response.arrayBuffer())
+  const buffer = await prepareAudio(url, this.context)
   if (this.context.state === 'closed') return
   this.buffers[kind] = buffer
   if (this.playing) this.restart()
