@@ -6,6 +6,20 @@ class Node { gain=new Param(); Q=new Param(); threshold=new Param(); knee=new Pa
 class Context { currentTime=0; state='running'; destination={}; sources=[]; filters=[]; createDynamicsCompressor(){return new Node()} createGain(){return new Node()} createBiquadFilter(){const n=new Node();this.filters.push(n);return n} createBufferSource(){const n=new Node();this.sources.push(n);return n} async resume(){} async close(){this.state='closed'} async decodeAudioData(){return {duration:120}} }
 globalThis.AudioContext=Context
 globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(1)})
+test('pending and decoded recordings are reused across mixing players',async()=>{
+ let downloads=0, decodes=0
+ const originalFetch=globalThis.fetch
+ globalThis.fetch=async()=>{downloads++;return {ok:true,arrayBuffer:async()=>new ArrayBuffer(1)}}
+ const first=new MixingAudio(), second=new MixingAudio()
+ first.context.decodeAudioData=async()=>{decodes++;return {duration:215}}
+ try {
+  await Promise.all([first.load('master','cache-test'),second.load('master','cache-test')])
+  assert.equal(downloads,1);assert.equal(decodes,1)
+  first.dispose()
+  await second.load('master','cache-test')
+  assert.equal(downloads,1);assert.equal(second.duration,215)
+ } finally {globalThis.fetch=originalFetch;first.dispose();second.dispose()}
+})
 test('motion reads separate frequency bands and RMS, reuses analyser, and clears on pause',()=>{
  const p=new MixingAudio()
  let creations=0

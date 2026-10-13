@@ -6,7 +6,7 @@
 - `HomeMixingCard.tsx`: Mixing 카드의 마우스 호버·키보드 포커스에서 흰 배경, 파란 그라데이션 글자, EQ 루프를 표시합니다. EQ 영상은 제공된 `녹음 2026-09-28 223303.mp4`의 5~7.5초 중 파형 영역만 추출한 2.5초 무음 루프입니다. 이탈 시 재생을 멈추고 처음으로 되돌리며, 동작 줄이기 설정에서는 Figma EQ 정지 이미지를 표시합니다.
 - `Settings.tsx` (`/settings`): 조그휠·노브 연결, 기본 음원·스크래치 음원 선택. USB 및 믹싱 시작 버튼은 없습니다.
 - `MusicSelect.tsx` (`/music-select`): 좌우 앨범 선택. + 링크는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
-- `Recommendations.tsx` (`/recommendations`): 홈의 Let’s Start Mixing 진입 화면. Figma 추천 앨범을 첫 1.6초 대기 후 0.8초 간격으로 왕복 순환하며, 가운데 앨범 호버·키보드 포커스·선택 중에는 자동 이동을 멈춥니다. 앨범 클릭으로 하단 미리듣기 UI를 표시하고 + 버튼은 추천곡을 왼쪽 덱에 보존한 채 오른쪽 음악 검색으로 이동합니다. 방향키와 터치 스와이프도 지원합니다. 추천 음원은 미등록 상태로 실제 미리듣기는 비활성입니다.
+- `Recommendations.tsx` (`/recommendations`): 홈의 Let’s Start Mixing 진입 화면. Figma 추천 앨범을 첫 1.6초 대기 후 0.8초 간격으로 왕복 순환하며, 가운데 앨범 호버·키보드 포커스·선택 중에는 자동 이동을 멈춥니다. 앨범 클릭으로 하단 미리듣기 UI를 표시하고 + 버튼은 추천곡을 왼쪽 덱에 보존한 채 오른쪽 음악 검색으로 이동합니다. 방향키와 터치 스와이프도 지원합니다. 추천 카드에 로컬 데모 음원 8개를 임의로 연결해 미리듣기를 지원합니다. 카드 9개 중 중복 음원 한 쌍은 캐러셀에서 최대한 멀리 배치합니다.
 - `MusicSearch.tsx` (`/music-search`): 앨범·아티스트 검색. 카드 선택 후 하단 플레이어의 +로 앨범을 확정합니다.
 - `Playlist.tsx` (`/playlist`): Figma Mixing List 예시 목록. 주변 앨범/하단 표시/방향키로 선택하며 즐겨찾기, 삭제·취소, 페이지 링크 복사를 제공합니다. 변경은 화면 내 임시 상태이며 실제 믹스셋 저장·녹음 파일 재생은 미연결입니다. 기존 `/music-search?from=playlist` 링크도 이 화면을 표시합니다.
 - `Mixing.tsx` (`/mixing?left=...&right=...`): 선택한 앨범이 하나 이상이면 진입합니다. 제목·아티스트·커버는 선택 앨범과 동일합니다.
@@ -18,11 +18,11 @@ EQ 재생에는 `mixing-eq-clean.mp4`, 정지 표시에는 `mixing-eq-clean.png`
 
 ## 재생 파일과 앨범 표시
 
-믹싱 재생에는 Setting의 기본 음원을 사용하며 초기값은 `/audio/videoplayback.mp3`입니다.
-앨범 표시와 실제 파일은 별개입니다. 선택 앨범을 바꿔도 현재는 같은 기본 음원이 재생됩니다.
+믹싱 재생에는 선택 카드에 연결된 데모 음원을 사용합니다. 연결 음원이 없는 경우 Setting의 기본 음원(`/audio/videoplayback.mp3`)을 사용합니다. 스크래치 음원은 Setting에서 선택합니다.
+앨범 표시와 실제 파일은 별개이며, 임의 매칭은 화면 이동 후에도 유지됩니다.
 
 검색 화면 미리듣기는 별도 경로입니다. `musicSelection.ts`의 `Track.audioSrc`가 있어야 재생되며, Setting의 기본 음원은 검색 미리듣기에 자동 적용되지 않습니다.
-현재 앨범 목록의 `audioSrc`는 미등록 상태입니다.
+검색 앨범 8개에는 각각 다른 데모 음원을 연결합니다. 파일 목록과 고정 임의 순서는 `demoAudio.ts`에서 관리합니다.
 
 ## 입력과 도트 UI
 
@@ -51,3 +51,4 @@ npm run build
 npm run lint
 node --test tests/ble-input.test.cjs tests/mixing-audio.test.mjs
 ```
+

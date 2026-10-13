@@ -25,6 +25,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
  const engine = useRef<MixingAudio | null>(null)
  const readJogMotion = useCallback(() => engine.current?.readMotion(), [])
  const [playing,setPlaying] = useState(false)
+ const [hasStarted,setHasStarted] = useState(false)
  const [position,setPosition] = useState(0)
  const [duration,setDuration] = useState(0)
  const [repeat,setRepeat] = useState(false)
@@ -38,10 +39,13 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   engine.current = player
   let active = true
   setLoading(true)
-  const entries = Object.entries(assets) as [AudioKind, {url:string;name:string}][]
+  const playbackAssets = track.audioSrc
+   ? {...assets, master: {url: track.audioSrc, name: track.title}}
+   : assets
+  const entries = Object.entries(playbackAssets) as [AudioKind, {url:string;name:string}][]
   void Promise.all(entries.map(([kind,asset])=>player.load(kind,asset.url))).then(()=>{if(active)setDuration(player.duration)}).catch(()=>{if(active)setError('음원을 불러올 수 없어요. Setting에서 파일을 확인해주세요.')}).finally(()=>{if(active)setLoading(false)})
   return () => {active=false;player.dispose();engine.current=null}
- },[assets])
+ },[assets,track.audioSrc,track.title])
  useEffect(()=>{engine.current?.setKnobs(hardware.knobs)},[hardware.knobs,assets])
  useEffect(()=>{engine.current?.setTouch(hardware.touching)},[hardware.touching,files.scratch,loading])
  useEffect(()=>{engine.current?.setRate(tempo)},[tempo,assets])
@@ -77,12 +81,12 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   const player=engine.current
   if(!player)return
   if(player.playing){player.pause();setPlaying(false)}
-  else {try{await player.play();setPlaying(player.playing);setError('')}catch(err){setError(err instanceof Error?err.message:'재생에 실패했어요.')}}
+  else {try{if(!hasStarted) player.seek(0);await player.play();setPlaying(player.playing);if(player.playing){setHasStarted(true);setPosition(player.position)}setError('')}catch(err){setError(err instanceof Error?err.message:'재생에 실패했어요.')}}
  }
  return <main className="mixing" aria-label="Mixing">
   <header className="mixing-header">
    <a className="mixing-back" href={selectionUrl('/music-select')} aria-label="음악 선택으로 돌아가기"><img src="/images/music-select/back.svg" alt="" /></a>
-   <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time>{formatTime(track.duration)}</time></div>
+   <div className="mixing-track"><AlbumCover className={track.id === 5 ? 'album-cover-trim' : undefined} src={track.cover} alt="" /><div><strong>{track.title}</strong><span>{track.artist}</span></div><time title={hasStarted ? '현재 재생 시간' : '전체 재생 시간'}>{formatTime(hasStarted ? position : duration || (track.audioSrc ? undefined : track.duration)).padStart(5, '0')}</time></div>
    <a className="mixing-finish" href="/playlist" onClick={()=>engine.current?.pause()}>Finish</a>
   </header>
   <div className="mixing-visual-area">
@@ -112,3 +116,5 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   {!loading && !files.master && <p className="mixing-status" role="status">Setting에서 기본 음원을 등록해주세요.</p>}
  </main>
 }
+
+
