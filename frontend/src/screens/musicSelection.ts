@@ -1,5 +1,5 @@
 import { recommendationTracks } from './recommendationTracks'
-import { demoAudioSources, demoAudioDurations } from './demoAudio'
+import { demoAudioSources, demoAudioDurations, electricShockAudio } from './demoAudio'
 
 export type Deck = 'left' | 'right'
 export interface Track { id: number; title: string; artist: string; cover: string; duration?: number; durationKind?: 'album'; audioSrc?: string }
@@ -13,7 +13,7 @@ export const tracks: Track[] = [
  {id:6,title:'Training Day',artist:'LNGSHOT',cover:'/images/music-search/6.png'},
  {id:7,title:'you seem pretty sad for a girl so in love',artist:'Olivia Rodrigo',cover:'/images/music-search/7.png'},
  {id:8,title:'you seem pretty sad for a girl so in love',artist:'Olivia Rodrigo',cover:'/images/music-search/8.png'},
-].map((track, index) => ({ ...track, audioSrc: demoAudioSources[index], duration: demoAudioDurations[index] }))
+].map((track, index) => ({ ...track, audioSrc: demoAudioSources[index], duration: demoAudioDurations[index], ...(track.id === 5 ? electricShockAudio : {}) }))
 tracks.push(...recommendationTracks)
 export function selectedTrack(deck: Deck, search = window.location.search) {
  return tracks.find(track => track.id === Number(new URLSearchParams(search).get(deck)))

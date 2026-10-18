@@ -1,5 +1,5 @@
 import type { Track } from './musicSelection'
-import { demoAudioSources, demoAudioDurations } from './demoAudio'
+import { demoAudioSources, demoAudioDurations, electricShockAudio, greedyAudio } from './demoAudio'
 
 export interface RecommendationTrack extends Track { album: string; previewCover?: string }
 const cover = (name: string) => `/images/recommendations/${name}.png`
@@ -20,5 +20,6 @@ export const recommendationTracks: RecommendationTrack[] = [
   // Nine cards share eight files; repeat at distance four around the carousel.
   audioSrc: demoAudioSources[index === 8 ? 4 : index],
   duration: demoAudioDurations[index === 8 ? 4 : index],
+  ...(track.id === 101 ? electricShockAudio : track.id === 102 ? greedyAudio : {}),
 }))
 
