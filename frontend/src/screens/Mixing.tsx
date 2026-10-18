@@ -38,12 +38,15 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   const player = new MixingAudio()
   engine.current = player
   let active = true
+  if (!track.audioSrc) {
+   setError('선택한 곡에 연결된 음원이 없어요. 다른 곡을 선택해주세요.')
+   setLoading(false)
+   return () => {active=false;player.dispose();engine.current=null}
+  }
   setLoading(true)
-  const playbackAssets = track.audioSrc
-   ? {...assets, master: {url: track.audioSrc, name: track.title}}
-   : assets
+  const playbackAssets = {...assets, master: {url: track.audioSrc, name: track.title}}
   const entries = Object.entries(playbackAssets) as [AudioKind, {url:string;name:string}][]
-  void Promise.all(entries.map(([kind,asset])=>player.load(kind,asset.url))).then(()=>{if(active)setDuration(player.duration)}).catch(()=>{if(active)setError('음원을 불러올 수 없어요. Setting에서 파일을 확인해주세요.')}).finally(()=>{if(active)setLoading(false)})
+  void Promise.all(entries.map(([kind,asset])=>player.load(kind,asset.url))).then(()=>{if(active)setDuration(player.duration)}).catch(()=>{if(active)setError('음원을 불러올 수 없어요. 다시 시도하거나 다른 곡을 선택해주세요.')}).finally(()=>{if(active)setLoading(false)})
   return () => {active=false;player.dispose();engine.current=null}
  },[assets,track.audioSrc,track.title])
  useEffect(()=>{engine.current?.setKnobs(hardware.knobs)},[hardware.knobs,assets])
@@ -105,7 +108,7 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
   <nav className="mixing-transport" aria-label="재생 컨트롤">
    <button aria-label="반복 재생" aria-pressed={repeat} onClick={()=>setRepeat(!repeat)}><img src={asset('repeat.svg')} alt="" /></button>
    <button aria-label="이전 곡" disabled={count<2} onClick={()=>onChange(-1)}><span className="mixing-skip"><img className="mixing-skip-bar" src={asset('bar.svg')} alt="" /><img src={asset('previous.svg')} alt="" /></span></button>
-   <button type="button" className="mixing-play" disabled={loading} aria-label={playing?'일시정지':'재생'} onClick={toggle}>
+   <button type="button" className="mixing-play" disabled={loading || !track.audioSrc} aria-label={playing?'일시정지':'재생'} onClick={toggle}>
     <img className="mixing-pause-icon" src={asset('pause.svg')} alt="" style={{display: playing ? 'block' : 'none'}} />
     <img className="mixing-play-artwork" src={asset('play.svg')} alt="" style={{display: playing ? 'none' : 'block'}} />
    </button>
@@ -113,7 +116,6 @@ function MixingPlayer({track,count,onChange,hardware}:{track:Track;count:number;
    <button aria-label="다른 선택 곡으로 전환" disabled={count<2} onClick={()=>onChange(1)}><img src={asset('shuffle.svg')} alt="" /></button>
   </nav>
   {error&&<p className="mixing-status" role="status">{error}</p>}
-  {!loading && !files.master && <p className="mixing-status" role="status">Setting에서 기본 음원을 등록해주세요.</p>}
  </main>
 }
 

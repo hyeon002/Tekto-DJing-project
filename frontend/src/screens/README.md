@@ -4,7 +4,7 @@
 
 - `Home.tsx` (`/`): 전체 화면 컨트롤러 배경 위에서 음악 선택, Setting, Playlist로 이동합니다. Today’s TOP 10 카드는 Today’s recommendation(`/recommendations`)에 연결하며 실시간 순위 데이터는 미연결입니다. 배경은 `/audio/BackgroundVid.mp4`를 음소거 상태로 자동 반복 재생하며, 로딩 중에는 컨트롤러 정지 이미지를 표시합니다. `videoSrc`로 배경 영상 경로를 변경할 수 있습니다.
 - `HomeMixingCard.tsx`: Mixing 카드의 마우스 호버·키보드 포커스에서 흰 배경, 파란 그라데이션 글자, EQ 루프를 표시합니다. EQ 영상은 제공된 `녹음 2026-09-28 223303.mp4`의 5~7.5초 중 파형 영역만 추출한 2.5초 무음 루프입니다. 이탈 시 재생을 멈추고 처음으로 되돌리며, 동작 줄이기 설정에서는 Figma EQ 정지 이미지를 표시합니다.
-- `Settings.tsx` (`/settings`): 조그휠·노브 연결, 기본 음원·스크래치 음원 선택. USB 및 믹싱 시작 버튼은 없습니다.
+- `Settings.tsx` (`/settings`): 조그휠·노브 기기 연결만 제공합니다. USB 및 믹싱 시작 버튼은 없습니다.
 - `MusicSelect.tsx` (`/music-select`): 좌우 앨범 선택. + 링크는 `/music-search?deck=left` 또는 `deck=right`로 이동합니다.
 - `Recommendations.tsx` (`/recommendations`): 홈의 Let’s Start Mixing 진입 화면. Figma 추천 앨범을 첫 1.6초 대기 후 0.8초 간격으로 왕복 순환하며, 가운데 앨범 호버·키보드 포커스·선택 중에는 자동 이동을 멈춥니다. 앨범 클릭으로 하단 미리듣기 UI를 표시하고 + 버튼은 추천곡을 왼쪽 덱에 보존한 채 오른쪽 음악 검색으로 이동합니다. 방향키와 터치 스와이프도 지원합니다. 추천 카드에 로컬 데모 음원 8개를 임의로 연결해 미리듣기를 지원합니다. 카드 9개 중 중복 음원 한 쌍은 캐러셀에서 최대한 멀리 배치합니다.
 - `MusicSearch.tsx` (`/music-search`): 앨범·아티스트 검색. 카드 선택 후 하단 플레이어의 +로 앨범을 확정합니다.
@@ -14,14 +14,14 @@
 EQ 재생에는 `mixing-eq-clean.mp4`, 정지 표시에는 `mixing-eq-clean.png`를 사용합니다. 원본의 부드러운 배경 성분을 제거한 뒤 흰색 배경으로 정규화했으며, CSS multiply 합성으로 파형만 카드 위에 표시합니다.
 
 앱 내부 링크는 `App.tsx`에서 처리하고, `MixingSession`이 연결·노브·음원 상태를 유지합니다.
-브라우저 새로고침은 새 세션을 시작합니다. 로컬 선택 파일은 서버에 업로드하지 않습니다.
+브라우저 새로고침은 새 세션을 시작합니다.
 
 ## 재생 파일과 앨범 표시
 
-믹싱 재생에는 선택 카드에 연결된 데모 음원을 사용합니다. 연결 음원이 없는 경우 Setting의 기본 음원(`/audio/videoplayback.mp3`)을 사용합니다. 스크래치 음원은 Setting에서 선택합니다.
+믹싱 재생에는 선택 카드에 연결된 데모 음원을 사용합니다. 연결 음원이 없는 경우 재생 버튼을 비활성화하고 다른 곡을 선택하도록 안내합니다. 스크래치 음원은 `public/audio/Heewon Oh - Dj Turntable - Scratch Vinyl Back and Forth  (1).wav`로 고정됩니다.
 앨범 표시와 실제 파일은 별개이며, 임의 매칭은 화면 이동 후에도 유지됩니다.
 
-검색 화면 미리듣기는 별도 경로입니다. `musicSelection.ts`의 `Track.audioSrc`가 있어야 재생되며, Setting의 기본 음원은 검색 미리듣기에 자동 적용되지 않습니다.
+검색 화면 미리듣기는 별도 경로입니다. `musicSelection.ts`의 `Track.audioSrc`가 있어야 재생됩니다.
 검색 앨범 8개에는 각각 다른 데모 음원을 연결합니다. 파일 목록과 고정 임의 순서는 `demoAudio.ts`에서 관리합니다.
 
 ## 입력과 도트 UI
@@ -35,7 +35,7 @@ EQ 재생에는 `mixing-eq-clean.mp4`, 정지 표시에는 `mixing-eq-clean.png`
 
 `MixingAudio`는 원곡을 Low(250Hz lowshelf) → Mid(1kHz peaking, Q 0.7) → High(4kHz highshelf) 순으로 처리합니다. 별도 베이스 파일이나 전체 음량 노브는 사용하지 않습니다.
 EQ는 값 변경을 부드럽게 반영하며, 최종 출력에는 과도한 레벨을 줄이는 컴프레서가 있습니다.
-스크래치 음원을 등록하면 재생 중 터치 On에서 120ms 크로스페이드로 전환하고, Off에서 기본 음원을 멈춘 위치부터 재개합니다. 스크래치 음원은 EQ를 우회하며, 미등록 시 기본 음악을 유지합니다.
+재생 중 터치 On에서 120ms 크로스페이드로 전환하고, Off에서 선택한 곡을 멈춘 위치부터 재개합니다. 스크래치 음원은 EQ를 우회합니다.
 
 재생/일시정지, 탐색, 반복, 선택 앨범 전환을 제공합니다. Finish는 재생을 멈추고 Playlist(`/playlist`)로 이동합니다.
 믹싱 화면에서 속도·Bass 수치 표시는 제거했으며, 로딩·오류·음원 미등록 안내만 필요할 때 표시합니다.
