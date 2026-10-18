@@ -4,8 +4,7 @@ export type AudioKind = 'master' | 'scratch'
 export type AudioAsset = { url: string; name: string }
 export type Session = {
  hardware: ReturnType<typeof useMixingHardware>
- assets: Partial<Record<AudioKind, AudioAsset>>
- setAsset: (kind: AudioKind, asset: AudioAsset) => void
+ assets: Readonly<Record<'scratch', AudioAsset>>
 }
 export const Context = createContext<Session | null>(null)
 
